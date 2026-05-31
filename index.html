@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Syahrul - Workspace Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === PREMIUM CSS VARIABLES === */
+        :root {
+            --bg-color: #fbfbfa; --sidebar-bg: #f2f2f0; --card-bg: #ffffff;
+            --text-main: #111111; --text-muted: #666666; --border-color: #e5e5e5;
+            --accent-blue: #0066cc; --accent-blue-hover: #005bb5;
+            --accent-green: #34c759; --accent-red: #ff3b30; --accent-orange: #ff9500; --accent-purple: #af52de;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04); --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --radius-md: 12px; --radius-lg: 20px; --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .dark-theme {
+            --bg-color: #000000; --sidebar-bg: #111111; --card-bg: #1c1c1e;
+            --text-main: #f5f5f7; --text-muted: #86868b; --border-color: #333336;
+            --accent-blue: #0a84ff; --accent-blue-hover: #007aff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; transition: var(--transition); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        /* Login Screen */
+        #login-screen { position: fixed; inset: 0; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
+        .login-box { width: 100%; max-width: 360px; padding: 40px; text-align: center; animation: fadeUp 0.6s ease; }
+        .login-logo { font-size: 3.5rem; color: var(--text-main); margin-bottom: 20px; }
+        .pin-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+        .pin-wrapper input { width: 100%; padding: 16px 45px 16px 20px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); font-size: 1.2rem; text-align: center; letter-spacing: 8px; background: var(--card-bg); color: var(--text-main); outline: none; }
+        .pin-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; padding: 10px; }
+        
+        .btn-primary { width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-primary:hover { background: var(--accent-blue-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-outline { padding: 10px 16px; background: transparent; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-main); font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+
+        /* Sidebar */
+        #sidebar { width: 260px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 25px 15px; z-index: 100; }
+        .profile-section { display: flex; align-items: center; gap: 12px; padding: 10px; margin-bottom: 20px; }
+        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-blue), #00ccff); display: flex; justify-content: center; align-items: center; color: white; font-weight: 700; font-size: 1.2rem; }
+        
+        .menu-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); transition: var(--transition); }
+        .menu-item i { font-size: 1.1rem; width: 20px; text-align: center; }
+        .menu-item:hover, .menu-item.active { background: var(--card-bg); color: var(--accent-blue); font-weight: 600; }
+        .dark-theme .menu-item.active { background: #2a2a2c; }
+        .badge { background: var(--accent-red); color: white; border-radius: 20px; padding: 2px 8px; font-size: 0.75rem; margin-left: auto; }
+
+        /* Main Content */
+        #main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 40px; position: relative; }
+        .page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
+        .header-actions { display: flex; gap: 10px; }
+        .tab-content { display: none; animation: fadeUp 0.4s ease forwards; }
+        .tab-content.active { display: block; }
+
+        /* Dashboard & Widgets */
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .widget { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 25px; box-shadow: var(--shadow-sm); }
+        .w-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--text-muted); font-size: 0.95rem; }
+        .w-value { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
+
+        /* Kanban */
+        .board-wrapper { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; align-items: flex-start; }
+        .board-col { flex: 1; min-width: 300px; background: var(--sidebar-bg); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .task-card { background: var(--card-bg); padding: 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); cursor: pointer; }
+        
+        /* Lists */
+        .list-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .list-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
+        .list-content { flex: 1; margin: 0 15px; }
+        
+        /* Jurnal Cards */
+        .jurnal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .jurnal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .jurnal-tag.pelajaran { background: rgba(52,199,89,0.1); color: var(--accent-green); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; align-self: flex-start; }
+        .jurnal-tag.kesalahan { background: rgba(255,59,48,0.1); color: var(--accent-red); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; align-self: flex-start; }
+        .jurnal-solusi { background: var(--sidebar-bg); padding: 10px; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid var(--accent-blue); margin-top: 5px; }
+
+        /* Calendar */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .cal-head { text-align: center; font-weight: 600; padding: 10px; color: var(--text-muted); font-size: 0.85rem; }
+        .cal-cell { aspect-ratio: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 8px; font-size: 0.9rem; font-weight: 500; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+        .cal-today { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(0,102,204,0.05); }
+        .dot-task { width: 100%; padding: 2px 4px; font-size: 0.65rem; background: rgba(255,149,0,0.2); color: var(--accent-orange); border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dot-agenda { width: 100%; padding: 2px 4px; font-size: 0.65rem; background: rgba(175,82,222,0.2); color: var(--accent-purple); border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Modals & Utils */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 30px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-control { width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-main); font-size: 0.95rem; outline: none; }
+        #global-loader { position: fixed; inset: 0; background: var(--bg-color); z-index: 9998; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border-color); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--text-main); color: var(--bg-color); padding: 14px 24px; border-radius: 30px; font-weight: 500; font-size: 0.95rem; animation: fadeUp 0.3s ease; }
+        
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            #sidebar { width: 100%; padding: 15px; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .profile-section, .theme-btn { display: none; }
+            .menu-container { display: flex; flex-direction: row; gap: 5px; }
+            .menu-item { padding: 10px 15px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; background: var(--bg-color); }
+            .menu-item.active { background: var(--accent-blue); color: white; }
+            #main-content { padding: 20px 15px; }
+            .board-wrapper { flex-direction: column; }
+            .board-col { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="global-loader"><div class="spinner"></div><p style="margin-top:15px; color:var(--text-muted)">Menyiapkan Workspace...</p></div>
+    <div id="toast-container"></div>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <i class="fa-brands fa-apple login-logo"></i>
+            <h2>Workspace Pro</h2>
+            <p>Sistem Logistik, Agenda & Jurnal</p>
+            <div class="pin-wrapper">
+                <input type="password" id="pin-input" placeholder="••••••" maxlength="6" onkeypress="if(event.key==='Enter') verifikasiPin()">
+                <i class="fa-regular fa-eye-slash pin-toggle" id="eye-icon" onclick="togglePin()"></i>
+            </div>
+            <button class="btn-primary" id="login-btn" onclick="verifikasiPin()">Buka Akses <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <div id="sidebar">
+        <div class="profile-section">
+            <div class="profile-avatar">S</div>
+            <div><h3 style="font-size:1rem; font-weight:600;">Syahrul</h3><p style="font-size:0.8rem; color:var(--text-muted)">Admin General Affair</p></div>
+        </div>
+        <div class="menu-container">
+            <div class="menu-item active" onclick="switchTab('dashboard')" data-tab="dashboard"><i class="fa-solid fa-border-all"></i> <span>Dashboard</span></div>
+            <div class="menu-item" onclick="switchTab('workspace')" data-tab="workspace"><i class="fa-solid fa-layer-group"></i> <span>Kanban</span></div>
+            <div class="menu-item" onclick="switchTab('laporan')" data-tab="laporan"><i class="fa-solid fa-boxes-stacked"></i> <span>Logistik</span></div>
+            <div class="menu-item" onclick="switchTab('calendar')" data-tab="calendar"><i class="fa-regular fa-calendar-days"></i> <span>Agenda & Kalender</span></div>
+            <div class="menu-item" onclick="switchTab('jurnal')" data-tab="jurnal"><i class="fa-solid fa-book-journal-whills"></i> <span>Jurnal Kerja</span></div>
+            <div class="menu-item" onclick="switchTab('backup')" data-tab="backup"><i class="fa-solid fa-cloud-arrow-up"></i> <span>Drive Backup</span></div>
+            <div class="menu-item" onclick="switchTab('inbox')" data-tab="inbox"><i class="fa-regular fa-bell"></i> <span>Notifikasi</span> <span class="badge" id="notif-badge" style="display:none">0</span></div>
+        </div>
+        <div class="theme-btn" style="margin-top:auto; padding-top:20px;">
+            <div class="menu-item" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i> <span>Ganti Tema</span></div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="page-header">
+            <h1 class="page-title" id="page-title">Dashboard</h1>
+            <div class="header-actions" id="header-actions"></div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content active">
+            <div class="dash-grid">
+                <div class="widget"><div class="w-header"><span>Tugas Selesai</span></div><div class="w-value" id="dash-task-val">0/0</div><p style="font-size:0.85rem; color:var(--text-muted)">Produktivitas tugas</p></div>
+                <div class="widget"><div class="w-header"><span>Logistik</span></div><div class="w-value" id="dash-log-val">0</div><p style="font-size:0.85rem; color:var(--text-muted)">Transaksi material</p></div>
+                <div class="widget"><div class="w-header"><span>Agenda Mendatang</span></div><div class="w-value" id="dash-agenda-val" style="color:var(--accent-purple)">0</div><p style="font-size:0.85rem; color:var(--text-muted)">Meeting & Acara kantor</p></div>
+            </div>
+            
+            <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:300px;">
+                    <h3 style="margin-bottom:15px; font-size:1.1rem;">Agenda Terdekat</h3>
+                    <div id="dash-recent-agenda"></div>
+                </div>
+                <div style="flex:1; min-width:300px;">
+                    <h3 style="margin-bottom:15px; font-size:1.1rem;">Tugas Berjalan</h3>
+                    <div id="dash-recent-tasks"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KANBAN -->
+        <div id="tab-workspace" class="tab-content">
+            <div class="board-wrapper">
+                <div class="board-col"><div class="col-head">To-Do</div><div id="col-todo"></div></div>
+                <div class="board-col"><div class="col-head">In Progress</div><div id="col-inprogress"></div></div>
+                <div class="board-col"><div class="col-head">Done</div><div id="col-done"></div></div>
+            </div>
+        </div>
+
+        <!-- LOGISTIK -->
+        <div id="tab-laporan" class="tab-content"><div id="logistics-list"></div></div>
+
+        <!-- CALENDAR -->
+        <div id="tab-calendar" class="tab-content">
+            <div class="widget"><div class="calendar-grid" id="calendar-grid"></div></div>
+            <h3 style="margin: 25px 0 15px 0;">Daftar Agenda</h3>
+            <div id="agenda-list"></div>
+        </div>
+
+        <!-- JURNAL KERJA (PRIVATE) -->
+        <div id="tab-jurnal" class="tab-content">
+            <p style="color:var(--text-muted); margin-bottom:20px;">Ruang privat evaluasi diri. Data di sini tidak ditampilkan di Dashboard.</p>
+            <div class="jurnal-grid" id="jurnal-list"></div>
+        </div>
+
+        <!-- BACKUP & INBOX -->
+        <div id="tab-backup" class="tab-content"><div id="backup-list"></div></div>
+        <div id="tab-inbox" class="tab-content"><div id="inbox-list"></div></div>
+    </div>
+
+    <!-- === MODALS === -->
+    
+    <!-- Modal Tugas -->
+    <div class="overlay" id="modal-task">
+        <div class="modal">
+            <h2 style="margin-bottom:20px;">Tugas Baru</h2>
+            <input type="text" id="t-judul" class="form-control" placeholder="Judul" style="margin-bottom:15px;">
+            <textarea id="t-desc" class="form-control" rows="2" placeholder="Catatan..." style="margin-bottom:15px;"></textarea>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <select id="t-prio" class="form-control"><option value="Rendah">Rendah</option><option value="Sedang">Sedang</option><option value="Tinggi">Tinggi</option></select>
+                <input type="date" id="t-dead" class="form-control">
+            </div>
+            <input type="file" id="t-file" class="form-control" style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-task')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitTask()">Simpan</button></div>
+        </div>
+    </div>
+
+    <!-- Modal Agenda -->
+    <div class="overlay" id="modal-agenda">
+        <div class="modal">
+            <h2 style="margin-bottom:20px;"><i class="fa-solid fa-calendar-plus" style="color:var(--accent-purple)"></i> Agenda Meeting Baru</h2>
+            <input type="text" id="a-judul" class="form-control" placeholder="Nama Rapat / Acara" style="margin-bottom:15px;">
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="datetime-local" id="a-waktu" class="form-control">
+            </div>
+            <input type="text" id="a-lokasi" class="form-control" placeholder="Lokasi / Link Zoom" style="margin-bottom:15px;">
+            <textarea id="a-desc" class="form-control" rows="2" placeholder="Persiapan / Keterangan..." style="margin-bottom:20px;"></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-agenda')">Batal</button><button class="btn-primary" style="width:auto; background:var(--accent-purple);" onclick="submitAgenda()">Kunci Agenda</button></div>
+        </div>
+    </div>
+
+    <!-- Modal Jurnal -->
+    <div class="overlay" id="modal-jurnal">
+        <div class="modal">
+            <h2 style="margin-bottom:20px;"><i class="fa-solid fa-book-open" style="color:var(--accent-green)"></i> Entri Jurnal Kerja</h2>
+            <select id="j-kat" class="form-control" style="margin-bottom:15px;" onchange="toggleSolusi()">
+                <option value="Pelajaran">Pelajaran Baru / Ilmu</option>
+                <option value="Kesalahan">Analisis Kesalahan</option>
+            </select>
+            <input type="text" id="j-topik" class="form-control" placeholder="Topik Pelajaran / Insiden" style="margin-bottom:15px;">
+            <textarea id="j-detail" class="form-control" rows="3" placeholder="Ceritakan detail kejadian atau pelajaran yang didapat..." style="margin-bottom:15px;"></textarea>
+            <textarea id="j-solusi" class="form-control" rows="2" placeholder="Langkah perbaikan / Solusi ke depan..." style="display:none; margin-bottom:20px; border-left: 3px solid var(--accent-red);"></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-jurnal')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitJurnal()">Simpan Jurnal</button></div>
+        </div>
+    </div>
+
+    <!-- Modal Logistik & Backup (Simple Versions) -->
+    <div class="overlay" id="modal-log">
+        <div class="modal">
+            <h2 style="margin-bottom:15px;">Catat Logistik</h2>
+            <div style="display:flex; gap:10px; margin-bottom:10px;"><input type="text" id="l-name" class="form-control" placeholder="Barang"><input type="number" id="l-qty" class="form-control" placeholder="Qty"></div>
+            <select id="l-action" class="form-control" style="margin-bottom:10px;"><option value="Diambil Dari">Diambil Dari</option><option value="Dibeli Dari">Dibeli Dari</option><option value="Dipinjam Ke">Dipinjam Ke</option><option value="Diberikan Ke">Diberikan Ke</option></select>
+            <input type="text" id="l-party" class="form-control" placeholder="Pihak (Orang/Toko)" style="margin-bottom:10px;">
+            <textarea id="l-desc" class="form-control" rows="2" placeholder="Ket..." style="margin-bottom:10px;"></textarea>
+            <input type="file" id="l-cam" class="form-control" accept="image/*" capture="environment" style="margin-bottom:15px;">
+            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-log')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitLog()">Kirim</button></div>
+        </div>
+    </div>
+    <div class="overlay" id="modal-backup"><div class="modal"><h2 style="margin-bottom:20px;">Upload Backup</h2><input type="file" id="b-file" class="form-control" style="margin-bottom:20px;"><div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-backup')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitBackup()">Upload</button></div></div></div>
+
+    <script>
+        // --- API URL ---
+        const API_URL = "https://script.google.com/macros/s/AKfycbzdx5gQilITyGFZP7rf0KkbKWEKfwld_rcTLJnWtU5N54fIHe0QWdk6NYmy5uvJM5Oy/exec"; // Ganti URL!
+        
+        let db = { tasks: [], reports: [], backups: [], agenda: [], jurnal: [], notifs: [] };
+
+        window.onload = () => {
+            if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-theme');
+            const pin = localStorage.getItem('pro_pin'); const time = localStorage.getItem('pro_time');
+            if (pin && time && (new Date().getTime() - time < 86400000)) { document.getElementById('login-screen').style.display = 'none'; loadAllData(); }
+        };
+
+        function showToast(msg, type="success") { const t = document.createElement('div'); t.className='toast'; t.innerHTML=msg; document.getElementById('toast-container').appendChild(t); setTimeout(()=>t.remove(), 3000); }
+        function togglePin() { const i = document.getElementById('pin-input'); i.type = i.type==="password"?"text":"password"; }
+        function toggleTheme() { document.body.classList.toggle('dark-theme'); localStorage.setItem('theme', document.body.classList.contains('dark-theme')?'dark':'light'); }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function showLoader(s) { document.getElementById('global-loader').style.display = s ? 'flex' : 'none'; }
+        function toggleSolusi() { document.getElementById('j-solusi').style.display = document.getElementById('j-kat').value === 'Kesalahan' ? 'block' : 'none'; }
+
+        function verifikasiPin() {
+            const pin = document.getElementById('pin-input').value;
+            if(!pin) return showToast("PIN kosong");
+            document.getElementById('login-btn').innerHTML = 'Memeriksa...';
+            fetch(`${API_URL}?action=checkPin&pin=${pin}`).then(r=>r.json()).then(res => {
+                if(res.valid) { localStorage.setItem('pro_pin', pin); localStorage.setItem('pro_time', new Date().getTime()); document.getElementById('login-screen').style.display='none'; loadAllData(); } 
+                else { showToast("PIN Salah!"); document.getElementById('login-btn').innerHTML = 'Buka Akses'; }
+            }).catch(()=>showToast("Gagal connect"));
+        }
+
+        // FETCH ALL DATA AT ONCE (TURBO SPEED)
+        function loadAllData() {
+            showLoader(true);
+            fetch(`${API_URL}?action=getAllData`).then(r=>r.json()).then(res => {
+                if(res.success) {
+                    db.tasks = res.tasks || []; db.reports = res.reports || []; db.backups = res.backups || [];
+                    db.agenda = res.agenda || []; db.jurnal = res.jurnal || []; db.notifs = res.notifs || [];
+                    switchTab('dashboard'); showToast("Workspace Sinkron!");
+                }
+                showLoader(false);
+            }).catch(()=>{ showLoader(false); showToast("Gagal unduh data"); });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            const acts = document.getElementById('header-actions'); acts.innerHTML = '';
+            
+            if(tabId === 'dashboard') { document.getElementById('page-title').innerText = "Dashboard"; renderDashboard(); }
+            else if(tabId === 'workspace') { document.getElementById('page-title').innerText = "Kanban"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-task')"><i class="fa-solid fa-plus"></i> Tugas</button>`; renderWorkspace(); }
+            else if(tabId === 'laporan') { document.getElementById('page-title').innerText = "Logistik"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-log')"><i class="fa-solid fa-boxes-stacked"></i> Catat</button>`; renderLogistics(); }
+            else if(tabId === 'calendar') { document.getElementById('page-title').innerText = "Agenda & Kalender"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-purple)" onclick="openModal('modal-agenda')"><i class="fa-solid fa-calendar-plus"></i> Rapat Baru</button>`; renderCalendar(); }
+            else if(tabId === 'jurnal') { document.getElementById('page-title').innerText = "Jurnal Evaluasi"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-green)" onclick="openModal('modal-jurnal')"><i class="fa-solid fa-pen"></i> Tulis Jurnal</button>`; renderJurnal(); }
+            else if(tabId === 'backup') { document.getElementById('page-title').innerText = "Backup"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-backup')">Upload</button>`; renderBackup(); }
+            else if(tabId === 'inbox') { document.getElementById('page-title').innerText = "Notifikasi"; renderInbox(); }
+            updateBadges();
+        }
+
+        function renderDashboard() {
+            document.getElementById('dash-task-val').innerText = `${db.tasks.filter(t=>t.Status==='Done').length}/${db.tasks.length}`;
+            document.getElementById('dash-log-val').innerText = db.reports.length;
+            
+            const today = new Date().setHours(0,0,0,0);
+            const upAgenda = db.agenda.filter(a => new Date(a.Waktu_Pelaksanaan).setHours(0,0,0,0) >= today).slice(0,3);
+            document.getElementById('dash-agenda-val').innerText = upAgenda.length;
+            
+            document.getElementById('dash-recent-agenda').innerHTML = upAgenda.length ? upAgenda.map(a => `<div class="list-card" style="border-left:4px solid var(--accent-purple)"><div class="list-content"><div class="list-title">${a.Judul_Acara}</div><div class="list-subtitle">${new Date(a.Waktu_Pelaksanaan).toLocaleString('id-ID',{weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})} • ${a.Lokasi}</div></div></div>`).join('') : '<p style="color:gray">Tidak ada agenda dekat.</p>';
+            
+            const inProg = db.tasks.filter(t=>t.Status==='In Progress').slice(0,3);
+            document.getElementById('dash-recent-tasks').innerHTML = inProg.length ? inProg.map(t => `<div class="list-card" style="border-left:4px solid var(--accent-blue)"><div class="list-content"><div class="list-title">${t.Judul}</div><div class="list-subtitle">DL: ${t.Deadline||'-'}</div></div></div>`).join('') : '<p style="color:gray">Tidak ada tugas In Progress.</p>';
+        }
+
+        function renderWorkspace() {
+            let td="", ip="", dn="";
+            db.tasks.forEach(t => {
+                let badge = t.Prioritas === 'Tinggi' ? 'bg-red' : (t.Prioritas === 'Sedang' ? 'bg-orange' : 'bg-green');
+                let card = `<div class="task-card"><div class="task-title">${t.Judul} <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline?new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric'}):'-'}</span><select class="form-control" style="width:auto; padding:5px" onchange="updateStatus('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div>`;
+                if(t.Status === 'To-Do') td+=card; else if(t.Status === 'In Progress') ip+=card; else dn+=card;
+            });
+            document.getElementById('col-todo').innerHTML = td; document.getElementById('col-inprogress').innerHTML = ip; document.getElementById('col-done').innerHTML = dn;
+        }
+
+        function renderCalendar() {
+            const now = new Date(); const y = now.getFullYear(); const m = now.getMonth();
+            const first = new Date(y, m, 1).getDay(); const days = new Date(y, m+1, 0).getDate();
+            let html = "";
+            ['Min','Sen','Sel','Rab','Kam','Jum','Sab'].forEach(d => html+=`<div class="cal-head">${d}</div>`);
+            for(let i=0; i<first; i++) html+=`<div class="cal-cell" style="opacity:0"></div>`;
+            for(let d=1; d<=days; d++) {
+                let dateStr = new Date(y,m,d).toDateString();
+                let isToday = dateStr === now.toDateString() ? 'cal-today' : '';
+                html += `<div class="cal-cell ${isToday}">${d}`;
+                db.tasks.forEach(t => { if(t.Deadline && new Date(t.Deadline).toDateString() === dateStr) html+=`<div class="dot-task">${t.Judul}</div>`; });
+                db.agenda.forEach(a => { if(a.Waktu_Pelaksanaan && new Date(a.Waktu_Pelaksanaan).toDateString() === dateStr) html+=`<div class="dot-agenda">${a.Judul_Acara}</div>`; });
+                html += `</div>`;
+            }
+            document.getElementById('calendar-grid').innerHTML = html;
+            document.getElementById('agenda-list').innerHTML = db.agenda.map(a => `<div class="list-card"><div class="list-icon" style="background:rgba(175,82,222,0.1); color:var(--accent-purple)"><i class="fa-solid fa-users"></i></div><div class="list-content"><div class="list-title">${a.Judul_Acara}</div><div class="list-subtitle">${new Date(a.Waktu_Pelaksanaan).toLocaleString('id-ID',{dateStyle:'full', timeStyle:'short'})} | 📍 ${a.Lokasi}</div><div style="font-size:0.8rem; margin-top:5px;">${a.Deskripsi}</div></div></div>`).join('');
+        }
+
+        function renderJurnal() {
+            let html = "";
+            [...db.jurnal].reverse().forEach(j => {
+                let cls = j.Kategori === 'Pelajaran' ? 'pelajaran' : 'kesalahan';
+                let sol = j.Kategori === 'Kesalahan' ? `<div class="jurnal-solusi"><strong>Solusi/Perbaikan:</strong><br>${j.Solusi_Tindakan}</div>` : '';
+                html += `<div class="jurnal-card"><span class="jurnal-tag ${cls}">${j.Kategori}</span><div style="font-weight:700; font-size:1.1rem">${j.Topik}</div><div style="font-size:0.9rem; color:var(--text-muted); white-space:pre-line;">${j.Detail_Kejadian}</div>${sol}<div style="font-size:0.75rem; color:gray; text-align:right; margin-top:10px;">${j.Tanggal_Catat}</div></div>`;
+            });
+            document.getElementById('jurnal-list').innerHTML = html || "<p>Belum ada entri jurnal.</p>";
+        }
+
+        function renderLogistics() { document.getElementById('logistics-list').innerHTML = [...db.reports].reverse().map(r => `<div class="list-card"><div class="list-content"><div class="list-title">${r.Nama_Barang} (x${r.Qty})</div><div class="list-subtitle">${r.Tipe_Aksi} - ${r.Pihak_Terkait}</div></div></div>`).join(''); }
+        function renderBackup() { document.getElementById('backup-list').innerHTML = [...db.backups].reverse().map(b => `<div class="list-card"><div class="list-content"><div class="list-title">${b.Nama_File}</div></div><a href="${b.File_Link}" class="btn-primary" style="width:auto; padding:5px 15px;">Unduh</a></div>`).join(''); }
+        function renderInbox() { document.getElementById('inbox-list').innerHTML = db.notifs.filter(n=>n.Status_Baca==='Belum').map(n => `<div class="list-card" style="border-left:4px solid var(--accent-red)"><div class="list-content"><div class="list-title">${n.Pesan}</div></div><button class="btn-outline" onclick="arsipNotif('${n.ID_Notif}')">Arsip</button></div>`).join('') || "<p>Inbox Bersih.</p>"; }
+        function updateBadges() { const u = db.notifs.filter(n=>n.Status_Baca==="Belum").length; document.getElementById('notif-badge').innerText = u; document.getElementById('notif-badge').style.display = u>0?"inline-block":"none"; }
+
+        // --- POST API ---
+        function sendPayload(payload) { showLoader(true); fetch(API_URL, {method:"POST", body:JSON.stringify(payload)}).then(()=>loadAllData()); }
+        function submitTask() { closeModal('modal-task'); sendPayload({action:"createTask", judul:document.getElementById('t-judul').value, deskripsi:document.getElementById('t-desc').value, prioritas:document.getElementById('t-prio').value, deadline:document.getElementById('t-dead').value}); }
+        function submitAgenda() { closeModal('modal-agenda'); sendPayload({action:"createAgenda", judul:document.getElementById('a-judul').value, waktu:document.getElementById('a-waktu').value, lokasi:document.getElementById('a-lokasi').value, deskripsi:document.getElementById('a-desc').value}); }
+        function submitJurnal() { closeModal('modal-jurnal'); sendPayload({action:"createJurnal", kategori:document.getElementById('j-kat').value, topik:document.getElementById('j-topik').value, detail:document.getElementById('j-detail').value, solusi:document.getElementById('j-solusi').value}); }
+        function submitLog() { closeModal('modal-log'); sendPayload({action:"createReport", namaBarang:document.getElementById('l-name').value, qty:document.getElementById('l-qty').value, tipeAksi:document.getElementById('l-action').value, pihakTerkait:document.getElementById('l-party').value}); }
+        function updateStatus(id, stat) { sendPayload({action:"updateStatus", taskId:id, status:stat}); }
+        function arsipNotif(id) { sendPayload({action:"markNotificationRead", notifId:id}); }
+    </script>
+</body>
+</html>
