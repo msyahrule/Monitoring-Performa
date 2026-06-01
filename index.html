@@ -31,7 +31,7 @@
         /* Login Screen */
         #login-screen { position: fixed; inset: 0; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
         .login-box { width: 100%; max-width: 360px; padding: 40px; text-align: center; animation: fadeUp 0.6s ease; }
-        .login-logo { font-size: 3.5rem; color: var(--text-main); margin-bottom: 20px; }
+        .login-logo { font-size: 3.5rem; color: var(--accent-blue); margin-bottom: 20px; }
         .pin-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
         .pin-wrapper input { width: 100%; padding: 16px 45px 16px 20px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); font-size: 1.2rem; text-align: center; letter-spacing: 8px; background: var(--card-bg); color: var(--text-main); outline: none; }
         .pin-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; padding: 10px; }
@@ -123,7 +123,8 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <i class="fa-solid fa-cube login-logo" style="color: var(--accent-blue);"></i>
+            <!-- Logo Apple diubah menjadi Kubus Biru -->
+            <i class="fa-solid fa-cube login-logo"></i>
             <h2>Workspace Pro</h2>
             <p>Sistem Logistik, Agenda & Jurnal</p>
             <div class="pin-wrapper">
@@ -137,7 +138,7 @@
     <div id="sidebar">
         <div class="profile-section">
             <div class="profile-avatar">S</div>
-            <div><h3 style="font-size:1rem; font-weight:600;">Syahrul</h3><p style="font-size:0.8rem; color:var(--text-muted)">Admin General Affair</p></div>
+            <div><h3 style="font-size:1rem; font-weight:600;">Syahrul</h3><p style="font-size:0.8rem; color:var(--text-muted)">Foreman</p></div>
         </div>
         <div class="menu-container">
             <div class="menu-item active" onclick="switchTab('dashboard')" data-tab="dashboard"><i class="fa-solid fa-border-all"></i> <span>Dashboard</span></div>
@@ -255,7 +256,7 @@
         </div>
     </div>
 
-    <!-- Modal Logistik & Backup (Simple Versions) -->
+    <!-- Modal Logistik & Backup (FIXED PAYLOADS) -->
     <div class="overlay" id="modal-log">
         <div class="modal">
             <h2 style="margin-bottom:15px;">Catat Logistik</h2>
@@ -267,11 +268,25 @@
             <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-log')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitLog()">Kirim</button></div>
         </div>
     </div>
-    <div class="overlay" id="modal-backup"><div class="modal"><h2 style="margin-bottom:20px;">Upload Backup</h2><input type="file" id="b-file" class="form-control" style="margin-bottom:20px;"><div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-backup')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitBackup()">Upload</button></div></div></div>
+
+    <div class="overlay" id="modal-backup">
+        <div class="modal">
+            <h2 style="margin-bottom:20px;">Upload Backup</h2>
+            <input type="file" id="b-file" class="form-control" style="margin-bottom:20px;">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn-outline" onclick="closeModal('modal-backup')">Batal</button>
+                <button class="btn-primary" style="width:auto" onclick="submitBackup()">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="modal-preview" onclick="closeModal('modal-preview')">
+        <div class="modal" id="preview-content" style="background:transparent; box-shadow:none; text-align:center; padding:0;"></div>
+    </div>
 
     <script>
-        // --- API URL ---
-        const API_URL = "https://script.google.com/macros/s/AKfycbzdx5gQilITyGFZP7rf0KkbKWEKfwld_rcTLJnWtU5N54fIHe0QWdk6NYmy5uvJM5Oy/exec"; // Ganti URL!
+        // --- 1. API URL (MASUKKAN URL ANDA DI BAWAH INI) ---
+        const API_URL = "https://script.google.com/macros/s/AKfycbzdx5gQilITyGFZP7rf0KkbKWEKfwld_rcTLJnWtU5N54fIHe0QWdk6NYmy5uvJM5Oy/exec"; 
         
         let db = { tasks: [], reports: [], backups: [], agenda: [], jurnal: [], notifs: [] };
 
@@ -295,11 +310,11 @@
             document.getElementById('login-btn').innerHTML = 'Memeriksa...';
             fetch(`${API_URL}?action=checkPin&pin=${pin}`).then(r=>r.json()).then(res => {
                 if(res.valid) { localStorage.setItem('pro_pin', pin); localStorage.setItem('pro_time', new Date().getTime()); document.getElementById('login-screen').style.display='none'; loadAllData(); } 
-                else { showToast("PIN Salah!"); document.getElementById('login-btn').innerHTML = 'Buka Akses'; }
+                else { showToast("PIN Salah!"); document.getElementById('login-btn').innerHTML = 'Buka Akses <i class="fa-solid fa-arrow-right"></i>'; }
             }).catch(()=>showToast("Gagal connect"));
         }
 
-        // FETCH ALL DATA AT ONCE (TURBO SPEED)
+        // FETCH ALL DATA
         function loadAllData() {
             showLoader(true);
             fetch(`${API_URL}?action=getAllData`).then(r=>r.json()).then(res => {
@@ -314,7 +329,7 @@
 
         function switchTab(tabId) {
             document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
-            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            if(document.querySelector(`[data-tab="${tabId}"]`)) document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
             document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
             
@@ -348,7 +363,9 @@
             let td="", ip="", dn="";
             db.tasks.forEach(t => {
                 let badge = t.Prioritas === 'Tinggi' ? 'bg-red' : (t.Prioritas === 'Sedang' ? 'bg-orange' : 'bg-green');
-                let card = `<div class="task-card"><div class="task-title">${t.Judul} <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline?new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric'}):'-'}</span><select class="form-control" style="width:auto; padding:5px" onchange="updateStatus('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div>`;
+                let fileBtn = t.File_Link ? `<i class="fa-regular fa-eye btn-preview" onclick="showImage('${t.File_Link}')" style="cursor:pointer; margin-right:5px; font-size:1.1rem; color:var(--accent-blue);"></i> <a href="${t.File_Link}" target="_blank" class="btn-download" style="color:var(--accent-blue);"><i class="fa-solid fa-download"></i></a>` : '';
+                
+                let card = `<div class="task-card"><div class="task-title">${t.Judul} <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline?new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric'}):'-'}</span><div style="display:flex; align-items:center; gap:5px;">${fileBtn} <select class="form-control" style="width:auto; padding:5px; margin-left:10px;" onchange="updateStatus('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div></div>`;
                 if(t.Status === 'To-Do') td+=card; else if(t.Status === 'In Progress') ip+=card; else dn+=card;
             });
             document.getElementById('col-todo').innerHTML = td; document.getElementById('col-inprogress').innerHTML = ip; document.getElementById('col-done').innerHTML = dn;
@@ -382,17 +399,89 @@
             document.getElementById('jurnal-list').innerHTML = html || "<p>Belum ada entri jurnal.</p>";
         }
 
-        function renderLogistics() { document.getElementById('logistics-list').innerHTML = [...db.reports].reverse().map(r => `<div class="list-card"><div class="list-content"><div class="list-title">${r.Nama_Barang} (x${r.Qty})</div><div class="list-subtitle">${r.Tipe_Aksi} - ${r.Pihak_Terkait}</div></div></div>`).join(''); }
-        function renderBackup() { document.getElementById('backup-list').innerHTML = [...db.backups].reverse().map(b => `<div class="list-card"><div class="list-content"><div class="list-title">${b.Nama_File}</div></div><a href="${b.File_Link}" class="btn-primary" style="width:auto; padding:5px 15px;">Unduh</a></div>`).join(''); }
+        function renderLogistics() { 
+            document.getElementById('logistics-list').innerHTML = [...db.reports].reverse().map(r => {
+                let fileBtn = r.Foto_Link ? `<i class="fa-solid fa-camera btn-preview" onclick="showImage('${r.Foto_Link}')" style="font-size:1.4rem; cursor:pointer; color:var(--accent-blue);"></i>` : '<span style="color:gray; font-size:0.8rem;">Tanpa Foto</span>';
+                return `<div class="list-card"><div class="list-content"><div class="list-title">${r.Nama_Barang} (x${r.Qty})</div><div class="list-subtitle">${r.Tipe_Aksi} - <strong>${r.Pihak_Terkait}</strong> | ${r.Tanggal_Laporan}</div></div><div>${fileBtn}</div></div>`;
+            }).join('') || "<p>Belum ada transaksi logistik.</p>"; 
+        }
+        
+        function renderBackup() { document.getElementById('backup-list').innerHTML = [...db.backups].reverse().map(b => `<div class="list-card"><div class="list-content"><div class="list-title">${b.Nama_File}</div><div class="list-subtitle">Waktu: ${b.Tanggal_Backup}</div></div><a href="${b.File_Link}" target="_blank" class="btn-primary" style="width:auto; padding:5px 15px;">Unduh</a></div>`).join('') || "<p>Belum ada file backup.</p>"; }
+        
         function renderInbox() { document.getElementById('inbox-list').innerHTML = db.notifs.filter(n=>n.Status_Baca==='Belum').map(n => `<div class="list-card" style="border-left:4px solid var(--accent-red)"><div class="list-content"><div class="list-title">${n.Pesan}</div></div><button class="btn-outline" onclick="arsipNotif('${n.ID_Notif}')">Arsip</button></div>`).join('') || "<p>Inbox Bersih.</p>"; }
         function updateBadges() { const u = db.notifs.filter(n=>n.Status_Baca==="Belum").length; document.getElementById('notif-badge').innerText = u; document.getElementById('notif-badge').style.display = u>0?"inline-block":"none"; }
 
-        // --- POST API ---
-        function sendPayload(payload) { showLoader(true); fetch(API_URL, {method:"POST", body:JSON.stringify(payload)}).then(()=>loadAllData()); }
-        function submitTask() { closeModal('modal-task'); sendPayload({action:"createTask", judul:document.getElementById('t-judul').value, deskripsi:document.getElementById('t-desc').value, prioritas:document.getElementById('t-prio').value, deadline:document.getElementById('t-dead').value}); }
+        function showImage(url) {
+            openModal('modal-preview');
+            document.getElementById('preview-content').innerHTML = `<img src="${url}" style="max-width:100%; border-radius:12px; margin-bottom:15px;"><br><a href="${url}" target="_blank" class="btn-primary">Buka File Asli</a>`;
+        }
+
+        // --- COMPRESSION & POST SYSTEM ---
+        function compressPhoto(file, cb) {
+            if (!file.type.startsWith('image/')) return cb(file, false);
+            const r = new FileReader();
+            r.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas'); let w = img.width, h = img.height;
+                    if(w > h && w > 1000) { h *= 1000/w; w = 1000; } else if(h > 1000) { w *= 1000/h; h = 1000; }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    cb(canvas.toDataURL('image/jpeg', 0.6).split(',')[1], true);
+                };
+                img.src = e.target.result;
+            }; r.readAsDataURL(file);
+        }
+
+        function sendPayload(payload) { 
+            showLoader(true); 
+            fetch(API_URL, {method:"POST", body:JSON.stringify(payload)})
+            .then(r=>r.json())
+            .then(res => { showToast(res.message); loadAllData(); })
+            .catch(()=> { showLoader(false); showToast("Koneksi bermasalah", "error"); });
+        }
+
+        function submitTask() {
+            if(!document.getElementById('t-judul').value) return showToast("Judul wajib diisi", "error");
+            const payload = { action:"createTask", judul:document.getElementById('t-judul').value, deskripsi:document.getElementById('t-desc').value, prioritas:document.getElementById('t-prio').value, deadline:document.getElementById('t-dead').value, fileData:null };
+            const file = document.getElementById('t-file').files[0];
+            closeModal('modal-task');
+            if(file) {
+                const r = new FileReader(); r.onload = e => { payload.fileData = e.target.result.split(',')[1]; payload.fileName = file.name; payload.fileMimeType = file.type; sendPayload(payload); }; r.readAsDataURL(file);
+            } else { sendPayload(payload); }
+        }
+
         function submitAgenda() { closeModal('modal-agenda'); sendPayload({action:"createAgenda", judul:document.getElementById('a-judul').value, waktu:document.getElementById('a-waktu').value, lokasi:document.getElementById('a-lokasi').value, deskripsi:document.getElementById('a-desc').value}); }
         function submitJurnal() { closeModal('modal-jurnal'); sendPayload({action:"createJurnal", kategori:document.getElementById('j-kat').value, topik:document.getElementById('j-topik').value, detail:document.getElementById('j-detail').value, solusi:document.getElementById('j-solusi').value}); }
-        function submitLog() { closeModal('modal-log'); sendPayload({action:"createReport", namaBarang:document.getElementById('l-name').value, qty:document.getElementById('l-qty').value, tipeAksi:document.getElementById('l-action').value, pihakTerkait:document.getElementById('l-party').value}); }
+        
+        // Perbaikan Bug Payload Logistik Kamera
+        function submitLog() {
+            if(!document.getElementById('l-name').value) return showToast("Nama Barang wajib diisi", "error");
+            const payload = { action:"createReport", namaBarang:document.getElementById('l-name').value, qty:document.getElementById('l-qty').value, tipeAksi:document.getElementById('l-action').value, pihakTerkait:document.getElementById('l-party').value, deskripsi:document.getElementById('l-desc').value, fileData:null };
+            const file = document.getElementById('l-cam').files[0];
+            closeModal('modal-log');
+            if(file) {
+                compressPhoto(file, (base64Data) => { 
+                    payload.fileData = base64Data; 
+                    payload.fileName = file.name; 
+                    payload.fileMimeType = "image/jpeg"; 
+                    sendPayload(payload); 
+                });
+            } else { sendPayload(payload); }
+        }
+
+        // Perbaikan Bug Action Payload Backup
+        function submitBackup() {
+            const file = document.getElementById('b-file').files[0];
+            if(!file) return showToast("Pilih file!", "error");
+            closeModal('modal-backup');
+            const r = new FileReader(); 
+            r.onload = e => { 
+                sendPayload({ action:"createBackup", fileName:file.name, fileMimeType:file.type, fileData:e.target.result.split(',')[1] }); 
+            }; 
+            r.readAsDataURL(file);
+        }
+
         function updateStatus(id, stat) { sendPayload({action:"updateStatus", taskId:id, status:stat}); }
         function arsipNotif(id) { sendPayload({action:"markNotificationRead", notifId:id}); }
     </script>
