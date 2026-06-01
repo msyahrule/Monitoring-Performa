@@ -128,12 +128,31 @@
         /* Mobile Device Optimizations */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            #sidebar { width: 100%; padding: 15px; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+            
+            /* 1. MENGATUR KONTEN UTAMA DI ATAS */
+            #main-content { 
+                order: 1; 
+                padding: 20px 15px; 
+            }
+
+            /* 2. MENGATUR MENU PINDAH KE BAWAH */
+            #sidebar { 
+                order: 2; 
+                width: 100%; 
+                padding: 10px 15px; 
+                flex-direction: row; 
+                overflow-x: auto; 
+                border-right: none; 
+                border-top: 1px solid var(--border-color); /* Garis pembatas pindah ke atas menu */
+                border-bottom: none;
+                background: var(--sidebar-bg);
+            }
+            
             .profile-section, .storage-text, .theme-btn { display: none; }
             .menu-container { display: flex; flex-direction: row; gap: 5px; width: 100%; }
             .menu-item { padding: 10px 15px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; background: var(--bg-color); margin-bottom: 0; }
-            .menu-item.active { background: var(--accent-blue); color: white; }
-            #main-content { padding: 20px 15px; }
+            .menu-item.active { background: var(--accent-blue); color: white; box-shadow: var(--shadow-sm); }
+            
             .board-wrapper { flex-direction: column; }
             .board-col { min-width: 100%; }
             .dash-grid { grid-template-columns: 1fr; }
