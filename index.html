@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* === PREMIUM CSS VARIABLES === */
+        /* === PREMIUM DESIGN COLORS & VARIABLE (APPLE STYLE) === */
         :root {
             --bg-color: #fbfbfa; --sidebar-bg: #f2f2f0; --card-bg: #ffffff;
             --text-main: #111111; --text-muted: #666666; --border-color: #e5e5e5;
@@ -28,102 +28,125 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
-        /* Login Screen */
+        /* Login Screen Minimalist */
         #login-screen { position: fixed; inset: 0; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
         .login-box { width: 100%; max-width: 360px; padding: 40px; text-align: center; animation: fadeUp 0.6s ease; }
         .login-logo { font-size: 3.5rem; color: var(--accent-blue); margin-bottom: 20px; }
         .pin-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
-        .pin-wrapper input { width: 100%; padding: 16px 45px 16px 20px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); font-size: 1.2rem; text-align: center; letter-spacing: 8px; background: var(--card-bg); color: var(--text-main); outline: none; }
+        .pin-wrapper input { width: 100%; padding: 16px 45px 16px 20px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); font-size: 1.2rem; text-align: center; letter-spacing: 8px; background: var(--card-bg); color: var(--text-main); outline: none; transition: var(--transition); }
+        .pin-wrapper input:focus { border-color: var(--accent-blue); }
         .pin-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; padding: 10px; }
         
         .btn-primary { width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-primary:hover { background: var(--accent-blue-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .btn-outline { padding: 10px 16px; background: transparent; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-main); font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        .btn-outline { padding: 10px 16px; background: transparent; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-main); font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: var(--transition); }
 
-        /* Sidebar */
-        #sidebar { width: 260px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 25px 15px; z-index: 100; }
+        /* Sidebar Navigation */
+        #sidebar { width: 260px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 25px 15px; z-index: 100; transition: var(--transition); }
         .profile-section { display: flex; align-items: center; gap: 12px; padding: 10px; margin-bottom: 20px; }
         .profile-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-blue), #00ccff); display: flex; justify-content: center; align-items: center; color: white; font-weight: 700; font-size: 1.2rem; }
         
+        .menu-container { display: flex; flex-direction: column; }
         .menu-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); transition: var(--transition); }
         .menu-item i { font-size: 1.1rem; width: 20px; text-align: center; }
-        .menu-item:hover, .menu-item.active { background: var(--card-bg); color: var(--accent-blue); font-weight: 600; }
+        .menu-item:hover, .menu-item.active { background: var(--card-bg); color: var(--accent-blue); font-weight: 600; box-shadow: var(--shadow-sm); }
         .dark-theme .menu-item.active { background: #2a2a2c; }
-        .badge { background: var(--accent-red); color: white; border-radius: 20px; padding: 2px 8px; font-size: 0.75rem; margin-left: auto; }
+        .badge { background: var(--accent-red); color: white; border-radius: 20px; padding: 2px 8px; font-size: 0.75rem; margin-left: auto; font-weight: 700; }
+        .storage-text { font-size: 0.75rem; color: gray; padding: 10px; border-top: 1px solid var(--border-color); margin-top: auto; }
 
-        /* Main Content */
+        /* Main Content Frame */
         #main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 40px; position: relative; }
         .page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
+        .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
         .header-actions { display: flex; gap: 10px; }
         .tab-content { display: none; animation: fadeUp 0.4s ease forwards; }
         .tab-content.active { display: block; }
 
-        /* Dashboard & Widgets */
+        /* Dashboard Engine Grid */
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .widget { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 25px; box-shadow: var(--shadow-sm); }
-        .w-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--text-muted); font-size: 0.95rem; }
+        .widget { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 25px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+        .widget:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .w-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
         .w-value { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
 
-        /* Kanban */
+        /* Kanban Columns Layout */
         .board-wrapper { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; align-items: flex-start; }
         .board-col { flex: 1; min-width: 300px; background: var(--sidebar-bg); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .task-card { background: var(--card-bg); padding: 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); cursor: pointer; }
+        .col-head { font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: space-between; }
+        .task-card { background: var(--card-bg); padding: 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); cursor: pointer; transition: var(--transition); }
+        .task-card:hover { transform: scale(1.01); box-shadow: var(--shadow-md); }
+        .task-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .task-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
+        .task-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px dashed var(--border-color); }
         
-        /* Lists */
-        .list-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .badge-prio { font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+        .bg-red { background: rgba(255,59,48,0.1); color: var(--accent-red); }
+        .bg-orange { background: rgba(255,149,0,0.1); color: var(--accent-orange); }
+        .bg-green { background: rgba(52,199,89,0.1); color: var(--accent-green); }
+
+        /* List Cards (Logistik, Backup & Inbox) */
+        .list-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+        .list-card:hover { transform: translateX(3px); border-color: var(--accent-blue); }
         .list-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .list-content { flex: 1; margin: 0 15px; }
+        .list-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 4px; }
+        .list-subtitle { font-size: 0.85rem; color: var(--text-muted); }
         
-        /* Jurnal Cards */
+        /* Jurnal Space Grid */
         .jurnal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        .jurnal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .jurnal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm); }
         .jurnal-tag.pelajaran { background: rgba(52,199,89,0.1); color: var(--accent-green); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; align-self: flex-start; }
         .jurnal-tag.kesalahan { background: rgba(255,59,48,0.1); color: var(--accent-red); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; align-self: flex-start; }
-        .jurnal-solusi { background: var(--sidebar-bg); padding: 10px; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid var(--accent-blue); margin-top: 5px; }
+        .jurnal-solusi { background: var(--sidebar-bg); padding: 12px; border-radius: 8px; font-size: 0.85rem; border-left: 3px solid var(--accent-blue); margin-top: 5px; line-height: 1.4; }
 
-        /* Calendar */
+        /* Calendar View Mechanics */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
         .cal-head { text-align: center; font-weight: 600; padding: 10px; color: var(--text-muted); font-size: 0.85rem; }
-        .cal-cell { aspect-ratio: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 8px; font-size: 0.9rem; font-weight: 500; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-        .cal-today { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(0,102,204,0.05); }
-        .dot-task { width: 100%; padding: 2px 4px; font-size: 0.65rem; background: rgba(255,149,0,0.2); color: var(--accent-orange); border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .dot-agenda { width: 100%; padding: 2px 4px; font-size: 0.65rem; background: rgba(175,82,222,0.2); color: var(--accent-purple); border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cal-cell { aspect-ratio: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 8px; font-size: 0.9rem; font-weight: 500; display: flex; flex-direction: column; gap: 4px; overflow: hidden; transition: var(--transition); }
+        .cal-cell:hover { border-color: var(--accent-blue); }
+        .cal-today { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(0,102,204,0.05); font-weight: 700; }
+        .dot-task { width: 100%; padding: 2px 4px; font-size: 0.65rem; background: rgba(255,149,0,0.15); color: var(--accent-orange); border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+        .dot-agenda { width: 100%; padding: 2px 4px; font-size: 0.65rem; background: rgba(175,82,222,0.15); color: var(--accent-purple); border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
 
-        /* Modals & Utils */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 30px; max-height: 90vh; overflow-y: auto; }
-        .form-group { margin-bottom: 15px; }
-        .form-control { width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-main); font-size: 0.95rem; outline: none; }
+        /* Overlay Modals & Overlay Blurs */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 30px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-md); animation: fadeUp 0.3s ease; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .form-control { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-main); font-size: 0.95rem; outline: none; transition: var(--transition); }
+        .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.08); }
+        
+        /* Loader & Elements Systems */
         #global-loader { position: fixed; inset: 0; background: var(--bg-color); z-index: 9998; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { width: 40px; height: 40px; border: 4px solid var(--border-color); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; }
         #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: var(--text-main); color: var(--bg-color); padding: 14px 24px; border-radius: 30px; font-weight: 500; font-size: 0.95rem; animation: fadeUp 0.3s ease; }
+        .toast { background: var(--text-main); color: var(--bg-color); padding: 14px 24px; border-radius: 30px; font-weight: 500; font-size: 0.95rem; box-shadow: var(--shadow-md); animation: fadeUp 0.3s ease; }
         
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Mobile Device Optimizations */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             #sidebar { width: 100%; padding: 15px; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
-            .profile-section, .theme-btn { display: none; }
-            .menu-container { display: flex; flex-direction: row; gap: 5px; }
-            .menu-item { padding: 10px 15px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; background: var(--bg-color); }
+            .profile-section, .storage-text, .theme-btn { display: none; }
+            .menu-container { display: flex; flex-direction: row; gap: 5px; width: 100%; }
+            .menu-item { padding: 10px 15px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; background: var(--bg-color); margin-bottom: 0; }
             .menu-item.active { background: var(--accent-blue); color: white; }
             #main-content { padding: 20px 15px; }
             .board-wrapper { flex-direction: column; }
             .board-col { min-width: 100%; }
+            .dash-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div id="global-loader"><div class="spinner"></div><p style="margin-top:15px; color:var(--text-muted)">Menyiapkan Workspace...</p></div>
+    <div id="global-loader"><div class="spinner"></div><p style="margin-top:15px; color:var(--text-muted); font-weight:500;">Menghubungkan Database...</p></div>
     <div id="toast-container"></div>
 
     <div id="login-screen">
         <div class="login-box">
-            <!-- Logo Apple diubah menjadi Kubus Biru -->
             <i class="fa-solid fa-cube login-logo"></i>
             <h2>Workspace Pro</h2>
             <p>Sistem Logistik, Agenda & Jurnal</p>
@@ -149,7 +172,8 @@
             <div class="menu-item" onclick="switchTab('backup')" data-tab="backup"><i class="fa-solid fa-cloud-arrow-up"></i> <span>Drive Backup</span></div>
             <div class="menu-item" onclick="switchTab('inbox')" data-tab="inbox"><i class="fa-regular fa-bell"></i> <span>Notifikasi</span> <span class="badge" id="notif-badge" style="display:none">0</span></div>
         </div>
-        <div class="theme-btn" style="margin-top:auto; padding-top:20px;">
+        <div class="storage-text" id="storage-info">Drive Sisa: Memuat...</div>
+        <div class="theme-btn" style="padding-top:10px;">
             <div class="menu-item" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i> <span>Ganti Tema</span></div>
         </div>
     </div>
@@ -160,123 +184,121 @@
             <div class="header-actions" id="header-actions"></div>
         </div>
 
-        <!-- DASHBOARD -->
         <div id="tab-dashboard" class="tab-content active">
             <div class="dash-grid">
-                <div class="widget"><div class="w-header"><span>Tugas Selesai</span></div><div class="w-value" id="dash-task-val">0/0</div><p style="font-size:0.85rem; color:var(--text-muted)">Produktivitas tugas</p></div>
-                <div class="widget"><div class="w-header"><span>Logistik</span></div><div class="w-value" id="dash-log-val">0</div><p style="font-size:0.85rem; color:var(--text-muted)">Transaksi material</p></div>
-                <div class="widget"><div class="w-header"><span>Agenda Mendatang</span></div><div class="w-value" id="dash-agenda-val" style="color:var(--accent-purple)">0</div><p style="font-size:0.85rem; color:var(--text-muted)">Meeting & Acara kantor</p></div>
+                <div class="widget"><div class="w-header"><span>Tugas Selesai</span><i class="fa-solid fa-circle-check" style="color:var(--accent-green)"></i></div><div class="w-value" id="dash-task-val">0/0</div><p style="font-size:0.85rem; color:var(--text-muted)">Rasio produktivitas</p></div>
+                <div class="widget"><div class="w-header"><span>Logistik Barang</span><i class="fa-solid fa-truck-ramp-box" style="color:var(--accent-blue)"></i></div><div class="w-value" id="dash-log-val">0</div><p style="font-size:0.85rem; color:var(--text-muted)">Total riwayat barang</p></div>
+                <div class="widget"><div class="w-header"><span>Agenda Terdekat</span><i class="fa-solid fa-hourglass-half" style="color:var(--accent-purple)"></i></div><div class="w-value" id="dash-agenda-val" style="color:var(--accent-purple)">0</div><p style="font-size:0.85rem; color:var(--text-muted)">Rapat/Acara mendatang</p></div>
             </div>
             
             <div style="display:flex; gap:20px; flex-wrap:wrap;">
                 <div style="flex:1; min-width:300px;">
-                    <h3 style="margin-bottom:15px; font-size:1.1rem;">Agenda Terdekat</h3>
+                    <h3 style="margin-bottom:15px; font-size:1.1rem; font-weight:600;">📅 Agenda Mendatang</h3>
                     <div id="dash-recent-agenda"></div>
                 </div>
                 <div style="flex:1; min-width:300px;">
-                    <h3 style="margin-bottom:15px; font-size:1.1rem;">Tugas Berjalan</h3>
+                    <h3 style="margin-bottom:15px; font-size:1.1rem; font-weight:600;">⚡ Pekerjaan Berjalan (In Progress)</h3>
                     <div id="dash-recent-tasks"></div>
                 </div>
             </div>
         </div>
 
-        <!-- KANBAN -->
         <div id="tab-workspace" class="tab-content">
             <div class="board-wrapper">
-                <div class="board-col"><div class="col-head">To-Do</div><div id="col-todo"></div></div>
-                <div class="board-col"><div class="col-head">In Progress</div><div id="col-inprogress"></div></div>
-                <div class="board-col"><div class="col-head">Done</div><div id="col-done"></div></div>
+                <div class="board-col"><div class="col-head"><span>🔴 To-Do</span></div><div id="col-todo"></div></div>
+                <div class="board-col"><div class="col-head"><span>🔵 In Progress</span></div><div id="col-inprogress"></div></div>
+                <div class="board-col"><div class="col-head"><span>🟢 Done</span></div><div id="col-done"></div></div>
             </div>
         </div>
 
-        <!-- LOGISTIK -->
         <div id="tab-laporan" class="tab-content"><div id="logistics-list"></div></div>
 
-        <!-- CALENDAR -->
         <div id="tab-calendar" class="tab-content">
-            <div class="widget"><div class="calendar-grid" id="calendar-grid"></div></div>
-            <h3 style="margin: 25px 0 15px 0;">Daftar Agenda</h3>
+            <div class="widget" style="padding:15px; border-radius:var(--radius-lg);"><div class="calendar-grid" id="calendar-grid"></div></div>
+            <h3 style="margin: 25px 0 15px 0; font-size:1.1rem; font-weight:600;">📋 Detail Jadwal Agenda</h3>
             <div id="agenda-list"></div>
         </div>
 
-        <!-- JURNAL KERJA (PRIVATE) -->
         <div id="tab-jurnal" class="tab-content">
-            <p style="color:var(--text-muted); margin-bottom:20px;">Ruang privat evaluasi diri. Data di sini tidak ditampilkan di Dashboard.</p>
+            <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.95rem;">Ruang privat evaluasi kerja foreman. Catatan tidak dipublikasikan ke Dashboard.</p>
             <div class="jurnal-grid" id="jurnal-list"></div>
         </div>
 
-        <!-- BACKUP & INBOX -->
         <div id="tab-backup" class="tab-content"><div id="backup-list"></div></div>
+        
         <div id="tab-inbox" class="tab-content"><div id="inbox-list"></div></div>
     </div>
 
-    <!-- === MODALS === -->
-    
-    <!-- Modal Tugas -->
     <div class="overlay" id="modal-task">
         <div class="modal">
-            <h2 style="margin-bottom:20px;">Tugas Baru</h2>
-            <input type="text" id="t-judul" class="form-control" placeholder="Judul" style="margin-bottom:15px;">
-            <textarea id="t-desc" class="form-control" rows="2" placeholder="Catatan..." style="margin-bottom:15px;"></textarea>
+            <h2 style="margin-bottom:20px; font-size:1.3rem;">Buat Tugas Baru</h2>
+            <div class="form-group"><label>Judul Pekerjaan</label><input type="text" id="t-judul" class="form-control" placeholder="Tulis nama tugas/pekerjaan..."></div>
+            <div class="form-group"><label>Keterangan Catatan Lapangan</label><textarea id="t-desc" class="form-control" rows="3" placeholder="Tulis rincian tugas di sini..."></textarea></div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <select id="t-prio" class="form-control"><option value="Rendah">Rendah</option><option value="Sedang">Sedang</option><option value="Tinggi">Tinggi</option></select>
-                <input type="date" id="t-dead" class="form-control">
+                <div style="flex:1;"><label>Prioritas</label><select id="t-prio" class="form-control"><option value="Rendah">🟢 Rendah</option><option value="Sedang">🟡 Sedang</option><option value="Tinggi">🔴 Tinggi</option></select></div>
+                <div style="flex:1;"><label>Batas Waktu (Deadline)</label><input type="date" id="t-dead" class="form-control"></div>
             </div>
-            <input type="file" id="t-file" class="form-control" style="margin-bottom:20px;">
-            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-task')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitTask()">Simpan</button></div>
+            <div class="form-group"><label>Lampiran Berkas (Opsional)</label><input type="file" id="t-file" class="form-control"></div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:25px;"><button class="btn-outline" onclick="closeModal('modal-task')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitTask()">Simpan Tugas</button></div>
         </div>
     </div>
 
-    <!-- Modal Agenda -->
     <div class="overlay" id="modal-agenda">
         <div class="modal">
-            <h2 style="margin-bottom:20px;"><i class="fa-solid fa-calendar-plus" style="color:var(--accent-purple)"></i> Agenda Meeting Baru</h2>
-            <input type="text" id="a-judul" class="form-control" placeholder="Nama Rapat / Acara" style="margin-bottom:15px;">
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <input type="datetime-local" id="a-waktu" class="form-control">
-            </div>
-            <input type="text" id="a-lokasi" class="form-control" placeholder="Lokasi / Link Zoom" style="margin-bottom:15px;">
-            <textarea id="a-desc" class="form-control" rows="2" placeholder="Persiapan / Keterangan..." style="margin-bottom:20px;"></textarea>
-            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-agenda')">Batal</button><button class="btn-primary" style="width:auto; background:var(--accent-purple);" onclick="submitAgenda()">Kunci Agenda</button></div>
+            <h2 style="margin-bottom:20px; font-size:1.3rem;"><i class="fa-solid fa-calendar-plus" style="color:var(--accent-purple)"></i> Jadwalkan Acara Kantor</h2>
+            <div class="form-group"><label>Nama Acara / Rapat</label><input type="text" id="a-judul" class="form-control" placeholder="Misal: Safety Meeting Mingguan"></div>
+            <div class="form-group"><label>Waktu Pelaksanaan</label><input type="datetime-local" id="a-waktu" class="form-control"></div>
+            <div class="form-group"><label>Lokasi / Ruang / Link Media</label><input type="text" id="a-lokasi" class="form-control" placeholder="Lokasi rapat atau link koordinasi..."></div>
+            <div class="form-group"><label>Deskripsi Tambahan / Agenda Pembahasan</label><textarea id="a-desc" class="form-control" rows="2" placeholder="Tulis poin pembahasan jika ada..."></textarea></div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:25px;"><button class="btn-outline" onclick="closeModal('modal-agenda')">Batal</button><button class="btn-primary" style="width:auto; background:var(--accent-purple);" onclick="submitAgenda()">Kunci Agenda</button></div>
         </div>
     </div>
 
-    <!-- Modal Jurnal -->
     <div class="overlay" id="modal-jurnal">
         <div class="modal">
-            <h2 style="margin-bottom:20px;"><i class="fa-solid fa-book-open" style="color:var(--accent-green)"></i> Entri Jurnal Kerja</h2>
-            <select id="j-kat" class="form-control" style="margin-bottom:15px;" onchange="toggleSolusi()">
-                <option value="Pelajaran">Pelajaran Baru / Ilmu</option>
-                <option value="Kesalahan">Analisis Kesalahan</option>
-            </select>
-            <input type="text" id="j-topik" class="form-control" placeholder="Topik Pelajaran / Insiden" style="margin-bottom:15px;">
-            <textarea id="j-detail" class="form-control" rows="3" placeholder="Ceritakan detail kejadian atau pelajaran yang didapat..." style="margin-bottom:15px;"></textarea>
-            <textarea id="j-solusi" class="form-control" rows="2" placeholder="Langkah perbaikan / Solusi ke depan..." style="display:none; margin-bottom:20px; border-left: 3px solid var(--accent-red);"></textarea>
-            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-jurnal')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitJurnal()">Simpan Jurnal</button></div>
+            <h2 style="margin-bottom:20px; font-size:1.3rem;"><i class="fa-solid fa-book-open" style="color:var(--accent-green)"></i> Catatan Evaluasi Jurnal</h2>
+            <div class="form-group">
+                <label>Kategori Log</label>
+                <select id="j-kat" class="form-control" onchange="toggleSolusi()">
+                    <option value="Pelajaran">💡 Pelajaran Baru / Ilmu Lapangan</option>
+                    <option value="Kesalahan">⚠️ Analisis Kesalahan Kerja</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Topik Pokok</label><input type="text" id="j-topik" class="form-control" placeholder="Ketik topik pembahasan..."></div>
+            <div class="form-group"><label>Kronologi / Detail Kejadian</label><textarea id="j-detail" class="form-control" rows="3" placeholder="Gambarkan rincian secara jelas..."></textarea></div>
+            <div class="form-group" id="group-solusi" style="display:none;"><label>Tindakan Perbaikan / Solusi</label><textarea id="j-solusi" class="form-control" rows="2" placeholder="Tulis rencana agar tidak terulang lagi..." style="border-left: 3px solid var(--accent-red);"></textarea></div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:25px;"><button class="btn-outline" onclick="closeModal('modal-jurnal')">Batal</button><button class="btn-primary" style="width:auto; background:var(--accent-green);" onclick="submitJurnal()">Simpan ke Jurnal</button></div>
         </div>
     </div>
 
-    <!-- Modal Logistik & Backup (FIXED PAYLOADS) -->
     <div class="overlay" id="modal-log">
         <div class="modal">
-            <h2 style="margin-bottom:15px;">Catat Logistik</h2>
-            <div style="display:flex; gap:10px; margin-bottom:10px;"><input type="text" id="l-name" class="form-control" placeholder="Barang"><input type="number" id="l-qty" class="form-control" placeholder="Qty"></div>
-            <select id="l-action" class="form-control" style="margin-bottom:10px;"><option value="Diambil Dari">Diambil Dari</option><option value="Dibeli Dari">Dibeli Dari</option><option value="Dipinjam Ke">Dipinjam Ke</option><option value="Diberikan Ke">Diberikan Ke</option></select>
-            <input type="text" id="l-party" class="form-control" placeholder="Pihak (Orang/Toko)" style="margin-bottom:10px;">
-            <textarea id="l-desc" class="form-control" rows="2" placeholder="Ket..." style="margin-bottom:10px;"></textarea>
-            <input type="file" id="l-cam" class="form-control" accept="image/*" capture="environment" style="margin-bottom:15px;">
-            <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-log')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitLog()">Kirim</button></div>
+            <h2 style="margin-bottom:20px; font-size:1.3rem;">Catat Logistik Material</h2>
+            <div style="display:flex; gap:10px;">
+                <div class="form-group" style="flex:2;"><label>Nama Barang</label><input type="text" id="l-name" class="form-control" placeholder="Lampu, Solar, Filter, dll..."></div>
+                <div class="form-group" style="flex:1;"><label>Qty</label><input type="number" id="l-qty" class="form-control" value="1"></div>
+            </div>
+            <div class="form-group">
+                <label>Tindakan Alur</label>
+                <select id="l-action" class="form-control">
+                    <option value="Diambil Dari">📥 Diambil Dari</option><option value="Dibeli Dari">💰 Dibeli Dari</option>
+                    <option value="Dipinjam Ke">📤 Dipinjam Ke</option><option value="Diberikan Ke">🤝 Diberikan Ke</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Nama Toko / Nama Pekerja Terkait</label><input type="text" id="l-party" class="form-control" placeholder="Pihak penyerah atau penerima..."></div>
+            <div class="form-group"><label>Catatan Keterangan</label><textarea id="l-desc" class="form-control" rows="2" placeholder="Tulis keperluan pemakaian barang..."></textarea></div>
+            <div class="form-group"><label><i class="fa-solid fa-camera"></i> Foto Kamera Lapangan (Otomatis Buka Kamera Belakang)</label><input type="file" id="l-cam" class="form-control" accept="image/*" capture="environment"></div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:25px;"><button class="btn-outline" onclick="closeModal('modal-log')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitLog()">Kirim Data</button></div>
         </div>
     </div>
 
     <div class="overlay" id="modal-backup">
-        <div class="modal">
-            <h2 style="margin-bottom:20px;">Upload Backup</h2>
+        <div class="modal" style="text-align:center;">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size:3rem; color:var(--accent-blue); margin-bottom:15px;"></i>
+            <h2 style="margin-bottom:10px; font-size:1.3rem;">Upload Berkas ke Drive</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">File otomatis diamankan tanpa membebani papan kerja.</p>
             <input type="file" id="b-file" class="form-control" style="margin-bottom:20px;">
-            <div style="display:flex; justify-content:flex-end; gap:10px;">
-                <button class="btn-outline" onclick="closeModal('modal-backup')">Batal</button>
-                <button class="btn-primary" style="width:auto" onclick="submitBackup()">Upload</button>
-            </div>
+            <div style="display:flex; justify-content:center; gap:10px;"><button class="btn-outline" onclick="closeModal('modal-backup')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitBackup()">Proses Upload</button></div>
         </div>
     </div>
 
@@ -285,10 +307,13 @@
     </div>
 
     <script>
-        // --- 1. API URL (MASUKKAN URL ANDA DI BAWAH INI) ---
+        // ==========================================
+        // 1. KONEKSI UTAMA API (PASTIKAN URL /exec ANDA DI SINI)
+        // ==========================================
         const API_URL = "https://script.google.com/macros/s/AKfycbzdx5gQilITyGFZP7rf0KkbKWEKfwld_rcTLJnWtU5N54fIHe0QWdk6NYmy5uvJM5Oy/exec"; 
         
-        let db = { tasks: [], reports: [], backups: [], agenda: [], jurnal: [], notifs: [] };
+        // Data Cache Global State
+        let db = { tasks: [], reports: [], backups: [], agenda: [], jurnal: [], notifs: [], storage: {} };
 
         window.onload = () => {
             if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-theme');
@@ -296,35 +321,39 @@
             if (pin && time && (new Date().getTime() - time < 86400000)) { document.getElementById('login-screen').style.display = 'none'; loadAllData(); }
         };
 
-        function showToast(msg, type="success") { const t = document.createElement('div'); t.className='toast'; t.innerHTML=msg; document.getElementById('toast-container').appendChild(t); setTimeout(()=>t.remove(), 3000); }
-        function togglePin() { const i = document.getElementById('pin-input'); i.type = i.type==="password"?"text":"password"; }
+        // UI Utility Interactive Controls
+        function showToast(msg) { const t = document.createElement('div'); t.className='toast'; t.innerHTML=msg; document.getElementById('toast-container').appendChild(t); setTimeout(()=>t.remove(), 3000); }
+        function togglePin() { const i = document.getElementById('pin-input'); const eye = document.getElementById('eye-icon'); if(i.type==="password") { i.type="text"; eye.className="fa-regular fa-eye pin-toggle"; } else { i.type="password"; eye.className="fa-regular fa-eye-slash pin-toggle"; } }
         function toggleTheme() { document.body.classList.toggle('dark-theme'); localStorage.setItem('theme', document.body.classList.contains('dark-theme')?'dark':'light'); }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function showLoader(s) { document.getElementById('global-loader').style.display = s ? 'flex' : 'none'; }
-        function toggleSolusi() { document.getElementById('j-solusi').style.display = document.getElementById('j-kat').value === 'Kesalahan' ? 'block' : 'none'; }
+        function toggleSolusi() { document.getElementById('group-solusi').style.display = document.getElementById('j-kat').value === 'Kesalahan' ? 'block' : 'none'; }
 
         function verifikasiPin() {
             const pin = document.getElementById('pin-input').value;
-            if(!pin) return showToast("PIN kosong");
-            document.getElementById('login-btn').innerHTML = 'Memeriksa...';
+            if(!pin) return showToast("PIN wajib diisi!");
+            document.getElementById('login-btn').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Membuka...';
             fetch(`${API_URL}?action=checkPin&pin=${pin}`).then(r=>r.json()).then(res => {
                 if(res.valid) { localStorage.setItem('pro_pin', pin); localStorage.setItem('pro_time', new Date().getTime()); document.getElementById('login-screen').style.display='none'; loadAllData(); } 
-                else { showToast("PIN Salah!"); document.getElementById('login-btn').innerHTML = 'Buka Akses <i class="fa-solid fa-arrow-right"></i>'; }
-            }).catch(()=>showToast("Gagal connect"));
+                else { showToast("PIN Akses Salah!"); document.getElementById('login-btn').innerHTML = 'Buka Akses <i class="fa-solid fa-arrow-right"></i>'; }
+            }).catch(()=>showToast("Koneksi gagal terhubung."));
         }
 
-        // FETCH ALL DATA
+        // ==========================================
+        // 2. BACKEND CONNECTOR ENGINE (TURBO ALL DATA FETCH)
+        // ==========================================
         function loadAllData() {
             showLoader(true);
             fetch(`${API_URL}?action=getAllData`).then(r=>r.json()).then(res => {
                 if(res.success) {
                     db.tasks = res.tasks || []; db.reports = res.reports || []; db.backups = res.backups || [];
                     db.agenda = res.agenda || []; db.jurnal = res.jurnal || []; db.notifs = res.notifs || [];
-                    switchTab('dashboard'); showToast("Workspace Sinkron!");
+                    db.storage = res.storage || {};
+                    switchTab('dashboard'); showToast("Data Workspace Sinkron!");
                 }
                 showLoader(false);
-            }).catch(()=>{ showLoader(false); showToast("Gagal unduh data"); });
+            }).catch(()=>{ showLoader(false); showToast("Gagal mengunduh database server."); });
         }
 
         function switchTab(tabId) {
@@ -335,16 +364,19 @@
             
             const acts = document.getElementById('header-actions'); acts.innerHTML = '';
             
-            if(tabId === 'dashboard') { document.getElementById('page-title').innerText = "Dashboard"; renderDashboard(); }
-            else if(tabId === 'workspace') { document.getElementById('page-title').innerText = "Kanban"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-task')"><i class="fa-solid fa-plus"></i> Tugas</button>`; renderWorkspace(); }
-            else if(tabId === 'laporan') { document.getElementById('page-title').innerText = "Logistik"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-log')"><i class="fa-solid fa-boxes-stacked"></i> Catat</button>`; renderLogistics(); }
-            else if(tabId === 'calendar') { document.getElementById('page-title').innerText = "Agenda & Kalender"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-purple)" onclick="openModal('modal-agenda')"><i class="fa-solid fa-calendar-plus"></i> Rapat Baru</button>`; renderCalendar(); }
-            else if(tabId === 'jurnal') { document.getElementById('page-title').innerText = "Jurnal Evaluasi"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-green)" onclick="openModal('modal-jurnal')"><i class="fa-solid fa-pen"></i> Tulis Jurnal</button>`; renderJurnal(); }
-            else if(tabId === 'backup') { document.getElementById('page-title').innerText = "Backup"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-backup')">Upload</button>`; renderBackup(); }
-            else if(tabId === 'inbox') { document.getElementById('page-title').innerText = "Notifikasi"; renderInbox(); }
+            if(tabId === 'dashboard') { document.getElementById('page-title').innerText = "Dashboard Overview"; renderDashboard(); }
+            else if(tabId === 'workspace') { document.getElementById('page-title').innerText = "Papan Kanban Tugas"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-task')"><i class="fa-solid fa-plus"></i> Tambah Tugas</button>`; renderWorkspace(); }
+            else if(tabId === 'laporan') { document.getElementById('page-title').innerText = "Alur Logistik Lapangan"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-log')"><i class="fa-solid fa-boxes-stacked"></i> Catat Logistik</button>`; renderLogistics(); }
+            else if(tabId === 'calendar') { document.getElementById('page-title').innerText = "Agenda & Kalender Kerja"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-purple)" onclick="openModal('modal-agenda')"><i class="fa-solid fa-calendar-plus"></i> Rapat Baru</button>`; renderCalendar(); }
+            else if(tabId === 'jurnal') { document.getElementById('page-title').innerText = "Jurnal Evaluasi Diri"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-green)" onclick="openModal('modal-jurnal')"><i class="fa-solid fa-pen"></i> Tulis Jurnal</button>`; renderJurnal(); }
+            else if(tabId === 'backup') { document.getElementById('page-title').innerText = "Drive Backup Center"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-backup')"><i class="fa-solid fa-upload"></i> Upload Berkas</button>`; renderBackup(); }
+            else if(tabId === 'inbox') { document.getElementById('page-title').innerText = "Kotak Notifikasi"; renderInbox(); }
             updateBadges();
         }
 
+        // ==========================================
+        // 3. UI RENDERING ENGINES (CORRECT HEADERS DATA MAP)
+        // ==========================================
         function renderDashboard() {
             document.getElementById('dash-task-val').innerText = `${db.tasks.filter(t=>t.Status==='Done').length}/${db.tasks.length}`;
             document.getElementById('dash-log-val').innerText = db.reports.length;
@@ -353,22 +385,28 @@
             const upAgenda = db.agenda.filter(a => new Date(a.Waktu_Pelaksanaan).setHours(0,0,0,0) >= today).slice(0,3);
             document.getElementById('dash-agenda-val').innerText = upAgenda.length;
             
-            document.getElementById('dash-recent-agenda').innerHTML = upAgenda.length ? upAgenda.map(a => `<div class="list-card" style="border-left:4px solid var(--accent-purple)"><div class="list-content"><div class="list-title">${a.Judul_Acara}</div><div class="list-subtitle">${new Date(a.Waktu_Pelaksanaan).toLocaleString('id-ID',{weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})} • ${a.Lokasi}</div></div></div>`).join('') : '<p style="color:gray">Tidak ada agenda dekat.</p>';
+            document.getElementById('dash-recent-agenda').innerHTML = upAgenda.length ? upAgenda.map(a => `<div class="list-card" style="border-left:4px solid var(--accent-purple)"><div class="list-content"><div class="list-title">${a.Judul_Acara}</div><div class="list-subtitle">${new Date(a.Waktu_Pelaksanaan).toLocaleString('id-ID',{weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})} • 📍 ${a.Lokasi}</div></div></div>`).join('') : '<p style="color:gray; padding:10px;">Tidak ada agenda rapat terdekat.</p>';
             
             const inProg = db.tasks.filter(t=>t.Status==='In Progress').slice(0,3);
-            document.getElementById('dash-recent-tasks').innerHTML = inProg.length ? inProg.map(t => `<div class="list-card" style="border-left:4px solid var(--accent-blue)"><div class="list-content"><div class="list-title">${t.Judul}</div><div class="list-subtitle">DL: ${t.Deadline||'-'}</div></div></div>`).join('') : '<p style="color:gray">Tidak ada tugas In Progress.</p>';
+            document.getElementById('dash-recent-tasks').innerHTML = inProg.length ? inProg.map(t => `<div class="list-card" style="border-left:4px solid var(--accent-blue)"><div class="list-content"><div class="list-title">${t.Judul}</div><div class="list-subtitle">Deadline: ${t.Deadline? new Date(t.Deadline).toLocaleDateString('id-ID') : '-'}</div></div></div>`).join('') : '<p style="color:gray; padding:10px;">Papan In Progress kosong.</p>';
+
+            if(db.storage.sisa) {
+                document.getElementById('storage-info').innerText = `Drive Sisa: ${(db.storage.sisa / (1024**3)).toFixed(2)} GB`;
+            }
         }
 
         function renderWorkspace() {
             let td="", ip="", dn="";
             db.tasks.forEach(t => {
                 let badge = t.Prioritas === 'Tinggi' ? 'bg-red' : (t.Prioritas === 'Sedang' ? 'bg-orange' : 'bg-green');
-                let fileBtn = t.File_Link ? `<i class="fa-regular fa-eye btn-preview" onclick="showImage('${t.File_Link}')" style="cursor:pointer; margin-right:5px; font-size:1.1rem; color:var(--accent-blue);"></i> <a href="${t.File_Link}" target="_blank" class="btn-download" style="color:var(--accent-blue);"><i class="fa-solid fa-download"></i></a>` : '';
+                let fileBtn = t.File_Link ? `<i class="fa-regular fa-eye btn-preview" onclick="showImage('${t.File_Link}')" style="cursor:pointer; font-size:1.1rem; color:var(--accent-blue); margin-right:5px;"></i> <a href="${t.File_Link}" target="_blank" style="color:var(--accent-blue);"><i class="fa-solid fa-download"></i></a>` : '';
                 
-                let card = `<div class="task-card"><div class="task-title">${t.Judul} <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline?new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric'}):'-'}</span><div style="display:flex; align-items:center; gap:5px;">${fileBtn} <select class="form-control" style="width:auto; padding:5px; margin-left:10px;" onchange="updateStatus('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div></div>`;
+                let card = `<div class="task-card"><div class="task-title"><span>${t.Judul}</span> <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline? new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric', month:'short'}) : '-'}</span><div style="display:flex; align-items:center; gap:8px;">${fileBtn} <select class="select-sm" style="border:1px solid var(--border-color); border-radius:6px; padding:3px;" onchange="updateStatus('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div></div>`;
                 if(t.Status === 'To-Do') td+=card; else if(t.Status === 'In Progress') ip+=card; else dn+=card;
             });
-            document.getElementById('col-todo').innerHTML = td; document.getElementById('col-inprogress').innerHTML = ip; document.getElementById('col-done').innerHTML = dn;
+            document.getElementById('col-todo').innerHTML = td || '<p style="color:gray; text-align:center; padding:20px; font-size:0.85rem;">Kosong</p>'; 
+            document.getElementById('col-inprogress').innerHTML = ip || '<p style="color:gray; text-align:center; padding:20px; font-size:0.85rem;">Kosong</p>'; 
+            document.getElementById('col-done').innerHTML = dn || '<p style="color:gray; text-align:center; padding:20px; font-size:0.85rem;">Kosong</p>';
         }
 
         function renderCalendar() {
@@ -386,100 +424,103 @@
                 html += `</div>`;
             }
             document.getElementById('calendar-grid').innerHTML = html;
-            document.getElementById('agenda-list').innerHTML = db.agenda.map(a => `<div class="list-card"><div class="list-icon" style="background:rgba(175,82,222,0.1); color:var(--accent-purple)"><i class="fa-solid fa-users"></i></div><div class="list-content"><div class="list-title">${a.Judul_Acara}</div><div class="list-subtitle">${new Date(a.Waktu_Pelaksanaan).toLocaleString('id-ID',{dateStyle:'full', timeStyle:'short'})} | 📍 ${a.Lokasi}</div><div style="font-size:0.8rem; margin-top:5px;">${a.Deskripsi}</div></div></div>`).join('');
+            document.getElementById('agenda-list').innerHTML = db.agenda.length ? db.agenda.map(a => `<div class="list-card"><div class="list-icon" style="background:rgba(175,82,222,0.1); color:var(--accent-purple)"><i class="fa-solid fa-users-gear"></i></div><div class="list-content"><div class="list-title">${a.Judul_Acara}</div><div class="list-subtitle">${new Date(a.Waktu_Pelaksanaan).toLocaleString('id-ID',{dateStyle:'full', timeStyle:'short'})} • 📍 <strong>${a.Lokasi}</strong></div><div style="font-size:0.85rem; color:var(--text-muted); margin-top:8px; line-height:1.4;">${a.Deskripsi || 'Tidak ada catatan agenda.'}</div></div></div>`).join('') : '<p style="color:gray; padding:10px;">Belum ada daftar agenda rapat.</p>';
         }
 
         function renderJurnal() {
             let html = "";
             [...db.jurnal].reverse().forEach(j => {
                 let cls = j.Kategori === 'Pelajaran' ? 'pelajaran' : 'kesalahan';
-                let sol = j.Kategori === 'Kesalahan' ? `<div class="jurnal-solusi"><strong>Solusi/Perbaikan:</strong><br>${j.Solusi_Tindakan}</div>` : '';
-                html += `<div class="jurnal-card"><span class="jurnal-tag ${cls}">${j.Kategori}</span><div style="font-weight:700; font-size:1.1rem">${j.Topik}</div><div style="font-size:0.9rem; color:var(--text-muted); white-space:pre-line;">${j.Detail_Kejadian}</div>${sol}<div style="font-size:0.75rem; color:gray; text-align:right; margin-top:10px;">${j.Tanggal_Catat}</div></div>`;
+                let sol = j.Kategori === 'Kesalahan' ? `<div class="jurnal-solusi"><strong>🛡️ Solusi / Rencana Perbaikan:</strong><br>${j.Solusi_Tindakan}</div>` : '';
+                html += `<div class="jurnal-card"><span class="jurnal-tag ${cls}">${j.Kategori}</span><div style="font-weight:700; font-size:1.1rem; letter-spacing:-0.3px;">${j.Topik}</div><div style="font-size:0.9rem; color:var(--text-muted); white-space:pre-line; line-height:1.4;">${j.Detail_Kejadian}</div>${sol}<div style="font-size:0.75rem; color:gray; text-align:right; margin-top:10px;"><i class="fa-regular fa-clock"></i> Dicatat: ${j.Tanggal_Catat}</div></div>`;
             });
-            document.getElementById('jurnal-list').innerHTML = html || "<p>Belum ada entri jurnal.</p>";
+            document.getElementById('jurnal-list').innerHTML = html || "<p style='color:gray; padding:10px;'>Belum ada entri jurnal kerja.</p>";
         }
 
         function renderLogistics() { 
-            document.getElementById('logistics-list').innerHTML = [...db.reports].reverse().map(r => {
-                let fileBtn = r.Foto_Link ? `<i class="fa-solid fa-camera btn-preview" onclick="showImage('${r.Foto_Link}')" style="font-size:1.4rem; cursor:pointer; color:var(--accent-blue);"></i>` : '<span style="color:gray; font-size:0.8rem;">Tanpa Foto</span>';
-                return `<div class="list-card"><div class="list-content"><div class="list-title">${r.Nama_Barang} (x${r.Qty})</div><div class="list-subtitle">${r.Tipe_Aksi} - <strong>${r.Pihak_Terkait}</strong> | ${r.Tanggal_Laporan}</div></div><div>${fileBtn}</div></div>`;
-            }).join('') || "<p>Belum ada transaksi logistik.</p>"; 
+            document.getElementById('logistics-list').innerHTML = db.reports.length ? [...db.reports].reverse().map(r => {
+                let fileBtn = r.Foto_Link ? `<i class="fa-solid fa-camera btn-preview" onclick="showImage('${r.Foto_Link}')" style="font-size:1.3rem; cursor:pointer; color:var(--accent-blue);"></i>` : '<span style="color:gray; font-size:0.8rem;">Tanpa Foto</span>';
+                let actColor = r.Tipe_Aksi.includes("Ambil") || r.Tipe_Aksi.includes("Pinjam") ? 'var(--accent-orange)' : 'var(--accent-green)';
+                return `<div class="list-card"><div style="display:flex; align-items:center;"><div class="list-icon" style="background:var(--sidebar-bg); color:${actColor};"><i class="fa-solid fa-boxes-stacked"></i></div><div class="list-content"><div class="list-title">${r.Nama_Barang} <span style="color:var(--accent-blue);">x${r.Qty}</span></div><div class="list-subtitle"><span style="font-weight:600; color:${actColor};">${r.Tipe_Aksi}</span> : <strong>${r.Pihak_Terkait}</strong> | <span style="font-size:0.8rem">${r.Tanggal_Laporan}</span></div><div style="font-size:0.8rem; color:gray; margin-top:4px;">Keterangan: ${r.Deskripsi || '-'}</div></div></div><div>${fileBtn}</div></div>`;
+            }).join('') : "<p style='color:gray; padding:10px;'>Belum ada transaksi logistik material.</p>"; 
         }
         
-        function renderBackup() { document.getElementById('backup-list').innerHTML = [...db.backups].reverse().map(b => `<div class="list-card"><div class="list-content"><div class="list-title">${b.Nama_File}</div><div class="list-subtitle">Waktu: ${b.Tanggal_Backup}</div></div><a href="${b.File_Link}" target="_blank" class="btn-primary" style="width:auto; padding:5px 15px;">Unduh</a></div>`).join('') || "<p>Belum ada file backup.</p>"; }
+        function renderBackup() { 
+            document.getElementById('backup-list').innerHTML = db.backups.length ? [...db.backups].reverse().map(b => `<div class="list-card"><div style="display:flex; align-items:center;"><div class="list-icon" style="background:rgba(0,102,204,0.05); color:var(--accent-blue);"><i class="fa-regular fa-file-zipper"></i></div><div class="list-content"><div class="list-title">${b.Nama_File}</div><div class="list-subtitle"><i class="fa-regular fa-clock"></i> Aman pada: ${b.Tanggal_Backup}</div></div></div><a href="${b.File_Link}" target="_blank" class="btn-primary" style="width:auto; padding:8px 18px;"><i class="fa-solid fa-download"></i> Unduh</a></div>`).join('') : "<p style='color:gray; padding:10px;'>Belum ada berkas ter-backup di Drive.</p>"; 
+        }
         
-        function renderInbox() { document.getElementById('inbox-list').innerHTML = db.notifs.filter(n=>n.Status_Baca==='Belum').map(n => `<div class="list-card" style="border-left:4px solid var(--accent-red)"><div class="list-content"><div class="list-title">${n.Pesan}</div></div><button class="btn-outline" onclick="arsipNotif('${n.ID_Notif}')">Arsip</button></div>`).join('') || "<p>Inbox Bersih.</p>"; }
+        function renderInbox() { 
+            document.getElementById('inbox-list').innerHTML = db.notifs.filter(n=>n.Status_Baca==='Belum').length ? db.notifs.filter(n=>n.Status_Baca==='Belum').map(n => `<div class="list-card" style="border-left:4px solid var(--accent-red)"><div class="list-content"><div class="list-title" style="font-weight:500;">${n.Pesan}</div><div class="list-subtitle"><i class="fa-regular fa-bell"></i> Pemicu: ${new Date(n.Tanggal_Muncul).toLocaleString('id-ID')}</div></div><button class="btn-outline" onclick="arsipNotif('${n.ID_Notif}')"><i class="fa-solid fa-box-archive"></i> Arsip</button></div>`).join('') : "<p style='color:gray; padding:10px;'>Kotak Reminder Bersih.</p>"; 
+        }
+        
         function updateBadges() { const u = db.notifs.filter(n=>n.Status_Baca==="Belum").length; document.getElementById('notif-badge').innerText = u; document.getElementById('notif-badge').style.display = u>0?"inline-block":"none"; }
 
         function showImage(url) {
             openModal('modal-preview');
-            document.getElementById('preview-content').innerHTML = `<img src="${url}" style="max-width:100%; border-radius:12px; margin-bottom:15px;"><br><a href="${url}" target="_blank" class="btn-primary">Buka File Asli</a>`;
+            document.getElementById('preview-content').innerHTML = `<img src="${url}" style="max-width:100%; max-height:75vh; border-radius:12px; box-shadow:var(--shadow-md); margin-bottom:15px;"><br><a href="${url}" target="_blank" class="btn-primary" style="display:inline-flex; width:auto; padding:10px 25px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Tautan Asli Google Drive</a>`;
         }
 
-        // --- COMPRESSION & POST SYSTEM ---
+        // ==========================================
+        // 4. DATA TRANSFERS & POSTING ENGINES
+        // ==========================================
+        function sendPayload(payload) { 
+            showLoader(true); 
+            fetch(API_URL, { method: "POST", body: JSON.stringify(payload) })
+            .then(r=>r.json())
+            .then(res => { showToast(res.message); loadAllData(); })
+            .catch(()=> { showLoader(false); showToast("Gagal mengirim payload ke server.", "error"); });
+        }
+
         function compressPhoto(file, cb) {
             if (!file.type.startsWith('image/')) return cb(file, false);
-            const r = new FileReader();
-            r.onload = e => {
-                const img = new Image();
-                img.onload = () => {
+            const r = new FileReader(); r.onload = e => {
+                const img = new Image(); img.onload = () => {
                     const canvas = document.createElement('canvas'); let w = img.width, h = img.height;
                     if(w > h && w > 1000) { h *= 1000/w; w = 1000; } else if(h > 1000) { w *= 1000/h; h = 1000; }
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                     cb(canvas.toDataURL('image/jpeg', 0.6).split(',')[1], true);
-                };
-                img.src = e.target.result;
+                }; img.src = e.target.result;
             }; r.readAsDataURL(file);
         }
 
-        function sendPayload(payload) { 
-            showLoader(true); 
-            fetch(API_URL, {method:"POST", body:JSON.stringify(payload)})
-            .then(r=>r.json())
-            .then(res => { showToast(res.message); loadAllData(); })
-            .catch(()=> { showLoader(false); showToast("Koneksi bermasalah", "error"); });
-        }
-
         function submitTask() {
-            if(!document.getElementById('t-judul').value) return showToast("Judul wajib diisi", "error");
+            if(!document.getElementById('t-judul').value) return showToast("Judul tugas wajib diisi!");
             const payload = { action:"createTask", judul:document.getElementById('t-judul').value, deskripsi:document.getElementById('t-desc').value, prioritas:document.getElementById('t-prio').value, deadline:document.getElementById('t-dead').value, fileData:null };
-            const file = document.getElementById('t-file').files[0];
-            closeModal('modal-task');
+            const file = document.getElementById('t-file').files[0]; closeModal('modal-task');
             if(file) {
                 const r = new FileReader(); r.onload = e => { payload.fileData = e.target.result.split(',')[1]; payload.fileName = file.name; payload.fileMimeType = file.type; sendPayload(payload); }; r.readAsDataURL(file);
             } else { sendPayload(payload); }
         }
 
-        function submitAgenda() { closeModal('modal-agenda'); sendPayload({action:"createAgenda", judul:document.getElementById('a-judul').value, waktu:document.getElementById('a-waktu').value, lokasi:document.getElementById('a-lokasi').value, deskripsi:document.getElementById('a-desc').value}); }
-        function submitJurnal() { closeModal('modal-jurnal'); sendPayload({action:"createJurnal", kategori:document.getElementById('j-kat').value, topik:document.getElementById('j-topik').value, detail:document.getElementById('j-detail').value, solusi:document.getElementById('j-solusi').value}); }
+        function submitAgenda() { 
+            if(!document.getElementById('a-judul').value || !document.getElementById('a-waktu').value) return showToast("Nama acara & Waktu wajib diisi!");
+            closeModal('modal-agenda'); 
+            sendPayload({action:"createAgenda", judul:document.getElementById('a-judul').value, waktu:document.getElementById('a-waktu').value, lokasi:document.getElementById('a-lokasi').value, deskripsi:document.getElementById('a-desc').value}); 
+        }
         
-        // Perbaikan Bug Payload Logistik Kamera
+        function submitJurnal() { 
+            if(!document.getElementById('j-topik').value || !document.getElementById('j-detail').value) return showToast("Topik & Detail cerita wajib diisi!");
+            closeModal('modal-jurnal'); 
+            sendPayload({action:"createJurnal", kategori:document.getElementById('j-kat').value, topik:document.getElementById('j-topik').value, detail:document.getElementById('j-detail').value, solusi:document.getElementById('j-solusi').value}); 
+        }
+        
         function submitLog() {
-            if(!document.getElementById('l-name').value) return showToast("Nama Barang wajib diisi", "error");
+            if(!document.getElementById('l-name').value || !document.getElementById('l-party').value) return showToast("Barang & Pihak Terkait wajib diisi!");
             const payload = { action:"createReport", namaBarang:document.getElementById('l-name').value, qty:document.getElementById('l-qty').value, tipeAksi:document.getElementById('l-action').value, pihakTerkait:document.getElementById('l-party').value, deskripsi:document.getElementById('l-desc').value, fileData:null };
-            const file = document.getElementById('l-cam').files[0];
-            closeModal('modal-log');
+            const file = document.getElementById('l-cam').files[0]; closeModal('modal-log');
             if(file) {
-                compressPhoto(file, (base64Data) => { 
-                    payload.fileData = base64Data; 
-                    payload.fileName = file.name; 
-                    payload.fileMimeType = "image/jpeg"; 
-                    sendPayload(payload); 
-                });
+                compressPhoto(file, (base64Data) => { payload.fileData = base64Data; payload.fileName = file.name; payload.fileMimeType = "image/jpeg"; sendPayload(payload); });
             } else { sendPayload(payload); }
         }
 
-        // Perbaikan Bug Action Payload Backup
         function submitBackup() {
-            const file = document.getElementById('b-file').files[0];
-            if(!file) return showToast("Pilih file!", "error");
-            closeModal('modal-backup');
-            const r = new FileReader(); 
-            r.onload = e => { 
+            const fileInput = document.getElementById('b-file');
+            if(!fileInput || fileInput.files.length === 0) return showToast("Pilih file terlebih dahulu!");
+            const file = fileInput.files[0]; closeModal('modal-backup');
+            const r = new FileReader(); r.onload = e => { 
                 sendPayload({ action:"createBackup", fileName:file.name, fileMimeType:file.type, fileData:e.target.result.split(',')[1] }); 
-            }; 
-            r.readAsDataURL(file);
+            }; r.readAsDataURL(file);
         }
 
         function updateStatus(id, stat) { sendPayload({action:"updateStatus", taskId:id, status:stat}); }
