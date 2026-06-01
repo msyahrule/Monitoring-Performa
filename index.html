@@ -308,9 +308,9 @@
 
     <script>
         // ==========================================
-        // 1. KONEKSI UTAMA API (PASTIKAN URL /exec ANDA DI SINI)
+        // 1. KONEKSI UTAMA API (GANTI DENGAN LINK /exec ANDA YANG BARU)
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzdx5gQilITyGFZP7rf0KkbKWEKfwld_rcTLJnWtU5N54fIHe0QWdk6NYmy5uvJM5Oy/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbyxAxGtKjx1fvEbBVc4s3QtFcLWtlWHBHuVor6HNTIppn8yfGPbNrHBprLFT-Rha6wD/exec"; 
         
         // Data Cache Global State
         let db = { tasks: [], reports: [], backups: [], agenda: [], jurnal: [], notifs: [], storage: {} };
@@ -496,7 +496,18 @@
         function submitAgenda() { 
             if(!document.getElementById('a-judul').value || !document.getElementById('a-waktu').value) return showToast("Nama acara & Waktu wajib diisi!");
             closeModal('modal-agenda'); 
-            sendPayload({action:"createAgenda", judul:document.getElementById('a-judul').value, waktu:document.getElementById('a-waktu').value, lokasi:document.getElementById('a-lokasi').value, deskripsi:document.getElementById('a-desc').value}); 
+            
+            // Format waktu dibersihkan agar ramah Google Sheets (menghapus "T")
+            const waktuRaw = document.getElementById('a-waktu').value;
+            const waktuBersih = waktuRaw.replace('T', ' ') + ':00';
+
+            sendPayload({
+                action: "createAgenda", 
+                judul: document.getElementById('a-judul').value, 
+                waktu: waktuBersih, 
+                lokasi: document.getElementById('a-lokasi').value, 
+                deskripsi: document.getElementById('a-desc').value
+            }); 
         }
         
         function submitJurnal() { 
