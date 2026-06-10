@@ -128,31 +128,12 @@
         /* Mobile Device Optimizations */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            
-            /* 1. MENGATUR KONTEN UTAMA DI ATAS */
-            #main-content { 
-                order: 1; 
-                padding: 20px 15px; 
-            }
-
-            /* 2. MENGATUR MENU PINDAH KE BAWAH */
-            #sidebar { 
-                order: 2; 
-                width: 100%; 
-                padding: 10px 15px; 
-                flex-direction: row; 
-                overflow-x: auto; 
-                border-right: none; 
-                border-top: 1px solid var(--border-color); /* Garis pembatas pindah ke atas menu */
-                border-bottom: none;
-                background: var(--sidebar-bg);
-            }
-            
+            #main-content { order: 1; padding: 20px 15px; }
+            #sidebar { order: 2; width: 100%; padding: 10px 15px; flex-direction: row; overflow-x: auto; border-right: none; border-top: 1px solid var(--border-color); border-bottom: none; background: var(--sidebar-bg); }
             .profile-section, .storage-text, .theme-btn { display: none; }
             .menu-container { display: flex; flex-direction: row; gap: 5px; width: 100%; }
             .menu-item { padding: 10px 15px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; background: var(--bg-color); margin-bottom: 0; }
             .menu-item.active { background: var(--accent-blue); color: white; box-shadow: var(--shadow-sm); }
-            
             .board-wrapper { flex-direction: column; }
             .board-col { min-width: 100%; }
             .dash-grid { grid-template-columns: 1fr; }
@@ -244,7 +225,6 @@
         </div>
 
         <div id="tab-backup" class="tab-content"><div id="backup-list"></div></div>
-        
         <div id="tab-inbox" class="tab-content"><div id="inbox-list"></div></div>
     </div>
 
@@ -306,7 +286,7 @@
             </div>
             <div class="form-group"><label>Nama Toko / Nama Pekerja Terkait</label><input type="text" id="l-party" class="form-control" placeholder="Pihak penyerah atau penerima..."></div>
             <div class="form-group"><label>Catatan Keterangan</label><textarea id="l-desc" class="form-control" rows="2" placeholder="Tulis keperluan pemakaian barang..."></textarea></div>
-            <div class="form-group"><label><i class="fa-solid fa-camera"></i> Foto Kamera Lapangan (Otomatis Buka Kamera Belakang)</label><input type="file" id="l-cam" class="form-control" accept="image/*" capture="environment"></div>
+            <div class="form-group"><label><i class="fa-solid fa-camera"></i> Foto Kamera Lapangan</label><input type="file" id="l-cam" class="form-control" accept="image/*" capture="environment"></div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:25px;"><button class="btn-outline" onclick="closeModal('modal-log')">Batal</button><button class="btn-primary" style="width:auto" onclick="submitLog()">Kirim Data</button></div>
         </div>
     </div>
@@ -326,18 +306,20 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. KONEKSI UTAMA API (GANTI DENGAN LINK /exec ANDA YANG BARU)
-        // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbyxAxGtKjx1fvEbBVc4s3QtFcLWtlWHBHuVor6HNTIppn8yfGPbNrHBprLFT-Rha6wD/exec"; 
+        // URL API Web App Apps Script
+        const API_URL = "https://script.google.com/macros/s/AKfycbwW5OxeYW01SfEllFtCsQDeuLuAEI0Kc-O_Lyw0ovL7JQptIv0-bqExkgWfxSMMgNEn/exec"; 
         
         // Data Cache Global State
         let db = { tasks: [], reports: [], backups: [], agenda: [], jurnal: [], notifs: [], storage: {} };
+        let currentActiveTab = 'dashboard';
 
         window.onload = () => {
             if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-theme');
             const pin = localStorage.getItem('pro_pin'); const time = localStorage.getItem('pro_time');
-            if (pin && time && (new Date().getTime() - time < 86400000)) { document.getElementById('login-screen').style.display = 'none'; loadAllData(); }
+            if (pin && time && (new Date().getTime() - time < 86400000)) { 
+                document.getElementById('login-screen').style.display = 'none'; 
+                loadAllData(); 
+            }
         };
 
         // UI Utility Interactive Controls
@@ -360,22 +342,24 @@
         }
 
         // ==========================================
-        // 2. BACKEND CONNECTOR ENGINE (TURBO ALL DATA FETCH)
+        // BACKEND CONNECTOR ENGINE (TURBO DATA FETCH)
         // ==========================================
-        function loadAllData() {
-            showLoader(true);
+        function loadAllData(silent = false) {
+            if (!silent) showLoader(true);
             fetch(`${API_URL}?action=getAllData`).then(r=>r.json()).then(res => {
                 if(res.success) {
                     db.tasks = res.tasks || []; db.reports = res.reports || []; db.backups = res.backups || [];
                     db.agenda = res.agenda || []; db.jurnal = res.jurnal || []; db.notifs = res.notifs || [];
                     db.storage = res.storage || {};
-                    switchTab('dashboard'); showToast("Data Workspace Sinkron!");
+                    refreshActiveTab();
+                    if(!silent) showToast("Data Workspace Sinkron!");
                 }
                 showLoader(false);
             }).catch(()=>{ showLoader(false); showToast("Gagal mengunduh database server."); });
         }
 
         function switchTab(tabId) {
+            currentActiveTab = tabId;
             document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
             if(document.querySelector(`[data-tab="${tabId}"]`)) document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
             document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
@@ -383,18 +367,31 @@
             
             const acts = document.getElementById('header-actions'); acts.innerHTML = '';
             
-            if(tabId === 'dashboard') { document.getElementById('page-title').innerText = "Dashboard Overview"; renderDashboard(); }
-            else if(tabId === 'workspace') { document.getElementById('page-title').innerText = "Papan Kanban Tugas"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-task')"><i class="fa-solid fa-plus"></i> Tambah Tugas</button>`; renderWorkspace(); }
-            else if(tabId === 'laporan') { document.getElementById('page-title').innerText = "Alur Logistik Lapangan"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-log')"><i class="fa-solid fa-boxes-stacked"></i> Catat Logistik</button>`; renderLogistics(); }
-            else if(tabId === 'calendar') { document.getElementById('page-title').innerText = "Agenda & Kalender Kerja"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-purple)" onclick="openModal('modal-agenda')"><i class="fa-solid fa-calendar-plus"></i> Rapat Baru</button>`; renderCalendar(); }
-            else if(tabId === 'jurnal') { document.getElementById('page-title').innerText = "Jurnal Evaluasi Diri"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-green)" onclick="openModal('modal-jurnal')"><i class="fa-solid fa-pen"></i> Tulis Jurnal</button>`; renderJurnal(); }
-            else if(tabId === 'backup') { document.getElementById('page-title').innerText = "Drive Backup Center"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-backup')"><i class="fa-solid fa-upload"></i> Upload Berkas</button>`; renderBackup(); }
-            else if(tabId === 'inbox') { document.getElementById('page-title').innerText = "Kotak Notifikasi"; renderInbox(); }
+            if(tabId === 'dashboard') { document.getElementById('page-title').innerText = "Dashboard Overview"; }
+            else if(tabId === 'workspace') { document.getElementById('page-title').innerText = "Papan Kanban Tugas"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-task')"><i class="fa-solid fa-plus"></i> Tambah Tugas</button>`; }
+            else if(tabId === 'laporan') { document.getElementById('page-title').innerText = "Alur Logistik Lapangan"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-log')"><i class="fa-solid fa-boxes-stacked"></i> Catat Logistik</button>`; }
+            else if(tabId === 'calendar') { document.getElementById('page-title').innerText = "Agenda & Kalender Kerja"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-purple)" onclick="openModal('modal-agenda')"><i class="fa-solid fa-calendar-plus"></i> Rapat Baru</button>`; }
+            else if(tabId === 'jurnal') { document.getElementById('page-title').innerText = "Jurnal Evaluasi Diri"; acts.innerHTML = `<button class="btn-primary" style="background:var(--accent-green)" onclick="openModal('modal-jurnal')"><i class="fa-solid fa-pen"></i> Tulis Jurnal</button>`; }
+            else if(tabId === 'backup') { document.getElementById('page-title').innerText = "Drive Backup Center"; acts.innerHTML = `<button class="btn-primary" onclick="openModal('modal-backup')"><i class="fa-solid fa-upload"></i> Upload Berkas</button>`; }
+            else if(tabId === 'inbox') { document.getElementById('page-title').innerText = "Kotak Notifikasi"; }
+            
+            refreshActiveTab();
+        }
+
+        // Fungsi khusus menyegarkan tab aktif tanpa merusak state tab lain
+        function refreshActiveTab() {
+            if(currentActiveTab === 'dashboard') renderDashboard();
+            else if(currentActiveTab === 'workspace') renderWorkspace();
+            else if(currentActiveTab === 'laporan') renderLogistics();
+            else if(currentActiveTab === 'calendar') renderCalendar();
+            else if(currentActiveTab === 'jurnal') renderJurnal();
+            else if(currentActiveTab === 'backup') renderBackup();
+            else if(currentActiveTab === 'inbox') renderInbox();
             updateBadges();
         }
 
         // ==========================================
-        // 3. UI RENDERING ENGINES (CORRECT HEADERS DATA MAP)
+        // UI RENDERING ENGINES
         // ==========================================
         function renderDashboard() {
             document.getElementById('dash-task-val').innerText = `${db.tasks.filter(t=>t.Status==='Done').length}/${db.tasks.length}`;
@@ -420,7 +417,7 @@
                 let badge = t.Prioritas === 'Tinggi' ? 'bg-red' : (t.Prioritas === 'Sedang' ? 'bg-orange' : 'bg-green');
                 let fileBtn = t.File_Link ? `<i class="fa-regular fa-eye btn-preview" onclick="showImage('${t.File_Link}')" style="cursor:pointer; font-size:1.1rem; color:var(--accent-blue); margin-right:5px;"></i> <a href="${t.File_Link}" target="_blank" style="color:var(--accent-blue);"><i class="fa-solid fa-download"></i></a>` : '';
                 
-                let card = `<div class="task-card"><div class="task-title"><span>${t.Judul}</span> <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline? new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric', month:'short'}) : '-'}</span><div style="display:flex; align-items:center; gap:8px;">${fileBtn} <select class="select-sm" style="border:1px solid var(--border-color); border-radius:6px; padding:3px;" onchange="updateStatus('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div></div>`;
+                let card = `<div class="task-card"><div class="task-title"><span>${t.Judul}</span> <span class="badge-prio ${badge}">${t.Prioritas||'Rendah'}</span></div><div class="task-desc">${t.Deskripsi||''}</div><div class="task-footer"><span style="color:var(--text-muted); font-size:0.8rem"><i class="fa-regular fa-calendar"></i> ${t.Deadline? new Date(t.Deadline).toLocaleDateString('id-ID',{day:'numeric', month:'short'}) : '-'}</span><div style="display:flex; align-items:center; gap:8px;">${fileBtn} <select class="select-sm" style="border:1px solid var(--border-color); border-radius:6px; padding:3px;" onchange="updateStatusLocal('${t.ID}', this.value)"><option value="To-Do" ${t.Status==='To-Do'?'selected':''}>To-Do</option><option value="In Progress" ${t.Status==='In Progress'?'selected':''}>In Prog</option><option value="Done" ${t.Status==='Done'?'selected':''}>Done</option></select></div></div></div>`;
                 if(t.Status === 'To-Do') td+=card; else if(t.Status === 'In Progress') ip+=card; else dn+=card;
             });
             document.getElementById('col-todo').innerHTML = td || '<p style="color:gray; text-align:center; padding:20px; font-size:0.85rem;">Kosong</p>'; 
@@ -469,7 +466,8 @@
         }
         
         function renderInbox() { 
-            document.getElementById('inbox-list').innerHTML = db.notifs.filter(n=>n.Status_Baca==='Belum').length ? db.notifs.filter(n=>n.Status_Baca==='Belum').map(n => `<div class="list-card" style="border-left:4px solid var(--accent-red)"><div class="list-content"><div class="list-title" style="font-weight:500;">${n.Pesan}</div><div class="list-subtitle"><i class="fa-regular fa-bell"></i> Pemicu: ${new Date(n.Tanggal_Muncul).toLocaleString('id-ID')}</div></div><button class="btn-outline" onclick="arsipNotif('${n.ID_Notif}')"><i class="fa-solid fa-box-archive"></i> Arsip</button></div>`).join('') : "<p style='color:gray; padding:10px;'>Kotak Reminder Bersih.</p>"; 
+            const activeNotifs = db.notifs.filter(n=>n.Status_Baca==='Belum');
+            document.getElementById('inbox-list').innerHTML = activeNotifs.length ? activeNotifs.map(n => `<div class="list-card" style="border-left:4px solid var(--accent-red)"><div class="list-content"><div class="list-title" style="font-weight:500;">${n.Pesan}</div><div class="list-subtitle"><i class="fa-regular fa-bell"></i> Pemicu: ${n.Tanggal_Muncul ? new Date(n.Tanggal_Muncul).toLocaleString('id-ID') : '-'}</div></div><button class="btn-outline" onclick="arsipNotifLocal('${n.ID_Notif}')"><i class="fa-solid fa-box-archive"></i> Arsip</button></div>`).join('') : "<p style='color:gray; padding:10px;'>Kotak Reminder Bersih.</p>"; 
         }
         
         function updateBadges() { const u = db.notifs.filter(n=>n.Status_Baca==="Belum").length; document.getElementById('notif-badge').innerText = u; document.getElementById('notif-badge').style.display = u>0?"inline-block":"none"; }
@@ -480,14 +478,29 @@
         }
 
         // ==========================================
-        // 4. DATA TRANSFERS & POSTING ENGINES
+        // DATA TRANSFERS & OPTIMISTIC POSTING ENGINES
         // ==========================================
-        function sendPayload(payload) { 
+        function sendPayload(payload, localUpdateFn = null) { 
             showLoader(true); 
+            
+            // Jika ada fungsi pembaruan lokal (Optimistic UI Update) jalankan segera demi zero-latency UX
+            if (localUpdateFn) {
+                localUpdateFn();
+                refreshActiveTab();
+            }
+
             fetch(API_URL, { method: "POST", body: JSON.stringify(payload) })
             .then(r=>r.json())
-            .then(res => { showToast(res.message); loadAllData(); })
-            .catch(()=> { showLoader(false); showToast("Gagal mengirim payload ke server.", "error"); });
+            .then(res => { 
+                showToast(res.message); 
+                // Tarik data secara background tanpa mengganggu tampilan layar user
+                loadAllData(true); 
+            })
+            .catch(()=> { 
+                showLoader(false); 
+                showToast("Gagal menyelaraskan data dengan database pusat.", "error"); 
+                loadAllData(true); // Re-fetch data valid jika gagal koordinasi
+            });
         }
 
         function compressPhoto(file, cb) {
@@ -504,57 +517,102 @@
         }
 
         function submitTask() {
-            if(!document.getElementById('t-judul').value) return showToast("Judul tugas wajib diisi!");
-            const payload = { action:"createTask", judul:document.getElementById('t-judul').value, deskripsi:document.getElementById('t-desc').value, prioritas:document.getElementById('t-prio').value, deadline:document.getElementById('t-dead').value, fileData:null };
+            const judulVal = document.getElementById('t-judul').value;
+            if(!judulVal) return showToast("Judul tugas wajib diisi!");
+            const payload = { action:"createTask", judul:judulVal, deskripsi:document.getElementById('t-desc').value, prioritas:document.getElementById('t-prio').value, deadline:document.getElementById('t-dead').value, fileData:null };
             const file = document.getElementById('t-file').files[0]; closeModal('modal-task');
+            
+            const localUpdate = () => {
+                db.tasks.push({ ID: "TEMP-" + new Date().getTime(), Judul: payload.judul, Deskripsi: payload.deskripsi, Status: "To-Do", Deadline: payload.deadline, Prioritas: payload.prioritas, File_Link: "" });
+            };
+
             if(file) {
-                const r = new FileReader(); r.onload = e => { payload.fileData = e.target.result.split(',')[1]; payload.fileName = file.name; payload.fileMimeType = file.type; sendPayload(payload); }; r.readAsDataURL(file);
-            } else { sendPayload(payload); }
+                const r = new FileReader(); r.onload = e => { payload.fileData = e.target.result.split(',')[1]; payload.fileName = file.name; payload.fileMimeType = file.type; sendPayload(payload, localUpdate); }; r.readAsDataURL(file);
+            } else { sendPayload(payload, localUpdate); }
         }
 
         function submitAgenda() { 
             if(!document.getElementById('a-judul').value || !document.getElementById('a-waktu').value) return showToast("Nama acara & Waktu wajib diisi!");
             closeModal('modal-agenda'); 
             
-            // Format waktu dibersihkan agar ramah Google Sheets (menghapus "T")
             const waktuRaw = document.getElementById('a-waktu').value;
             const waktuBersih = waktuRaw.replace('T', ' ') + ':00';
-
-            sendPayload({
+            const payload = {
                 action: "createAgenda", 
                 judul: document.getElementById('a-judul').value, 
                 waktu: waktuBersih, 
                 lokasi: document.getElementById('a-lokasi').value, 
                 deskripsi: document.getElementById('a-desc').value
-            }); 
+            };
+
+            const localUpdate = () => {
+                db.agenda.push({ ID_Agenda: "TEMP-" + new Date().getTime(), Judul_Acara: payload.judul, Waktu_Pelaksanaan: payload.waktu, Lokasi: payload.lokasi, Deskripsi: payload.deskripsi });
+            };
+
+            sendPayload(payload, localUpdate); 
         }
         
         function submitJurnal() { 
             if(!document.getElementById('j-topik').value || !document.getElementById('j-detail').value) return showToast("Topik & Detail cerita wajib diisi!");
             closeModal('modal-jurnal'); 
-            sendPayload({action:"createJurnal", kategori:document.getElementById('j-kat').value, topik:document.getElementById('j-topik').value, detail:document.getElementById('j-detail').value, solusi:document.getElementById('j-solusi').value}); 
+            const payload = {action:"createJurnal", kategori:document.getElementById('j-kat').value, topik:document.getElementById('j-topik').value, detail:document.getElementById('j-detail').value, solusi:document.getElementById('j-solusi').value};
+            
+            const localUpdate = () => {
+                const tgl = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                db.jurnal.push({ ID_Jurnal: "TEMP-" + new Date().getTime(), Kategori: payload.kategori, Topik: payload.topik, Detail_Kejadian: payload.detail, Solusi_Tindakan: payload.solusi || "-", Tanggal_Catat: tgl });
+            };
+
+            sendPayload(payload, localUpdate); 
         }
         
         function submitLog() {
             if(!document.getElementById('l-name').value || !document.getElementById('l-party').value) return showToast("Barang & Pihak Terkait wajib diisi!");
             const payload = { action:"createReport", namaBarang:document.getElementById('l-name').value, qty:document.getElementById('l-qty').value, tipeAksi:document.getElementById('l-action').value, pihakTerkait:document.getElementById('l-party').value, deskripsi:document.getElementById('l-desc').value, fileData:null };
             const file = document.getElementById('l-cam').files[0]; closeModal('modal-log');
+            
+            const localUpdate = () => {
+                const tgl = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                db.reports.push({ ID_Laporan: "TEMP-" + new Date().getTime(), Nama_Barang: payload.namaBarang, Qty: payload.qty, Tipe_Aksi: payload.tipeAksi, Pihak_Terkait: payload.pihakTerkait, Deskripsi: payload.deskripsi, Foto_Link: "", Tanggal_Laporan: tgl });
+            };
+
             if(file) {
-                compressPhoto(file, (base64Data) => { payload.fileData = base64Data; payload.fileName = file.name; payload.fileMimeType = "image/jpeg"; sendPayload(payload); });
-            } else { sendPayload(payload); }
+                compressPhoto(file, (base64Data) => { payload.fileData = base64Data; payload.fileName = file.name; payload.fileMimeType = "image/jpeg"; sendPayload(payload, localUpdate); });
+            } else { sendPayload(payload, localUpdate); }
         }
 
         function submitBackup() {
             const fileInput = document.getElementById('b-file');
             if(!fileInput || fileInput.files.length === 0) return showToast("Pilih file terlebih dahulu!");
             const file = fileInput.files[0]; closeModal('modal-backup');
+            
+            const localUpdate = () => {
+                const tgl = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                db.backups.push({ Nama_File: file.name, Tanggal_Backup: tgl, File_Link: "#" });
+            };
+
             const r = new FileReader(); r.onload = e => { 
-                sendPayload({ action:"createBackup", fileName:file.name, fileMimeType:file.type, fileData:e.target.result.split(',')[1] }); 
+                sendPayload({ action:"createBackup", fileName:file.name, fileMimeType:file.type, fileData:e.target.result.split(',')[1] }, localUpdate); 
             }; r.readAsDataURL(file);
         }
 
-        function updateStatus(id, stat) { sendPayload({action:"updateStatus", taskId:id, status:stat}); }
-        function arsipNotif(id) { sendPayload({action:"markNotificationRead", notifId:id}); }
+        // OPTIMIZED ZERO-LATENCY INTERACTION CONTROLLERS
+        function updateStatusLocal(id, stat) {
+            const payload = {action:"updateStatus", taskId:id, status:stat};
+            const localUpdate = () => {
+                let task = db.tasks.find(t => t.ID === id);
+                if(task) task.Status = stat;
+            };
+            sendPayload(payload, localUpdate);
+        }
+
+        function arsipNotifLocal(id) {
+            const payload = {action:"markNotificationRead", notifId:id};
+            const localUpdate = () => {
+                let notif = db.notifs.find(n => n.ID_Notif === id);
+                if(notif) notif.Status_Baca = "Sudah";
+            };
+            sendPayload(payload, localUpdate);
+        }
     </script>
 </body>
 </html>
